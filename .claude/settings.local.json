@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/matte/Downloads/**)",
+      "Bash(python -c \":*)",
+      "Bash(python -m pip install pypdf --quiet)",
+      "WebFetch(domain:lespot-paris.netlify.app)",
+      "WebFetch(domain:www.linkedin.com)",
+      "WebFetch(domain:www.meetball.fun)",
+      "WebFetch(domain:app.meetball.fun)",
+      "WebFetch(domain:cdn.prod.website-files.com)",
+      "WebFetch(domain:uploads-ssl.webflow.com)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3456/)",
+      "Bash(start \"\" \"C:\\\\Users\\\\matte\\\\Documents\\\\Claude Code\\\\Scaleform Portfolio\\\\index.html\")",
+      "Bash(python -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(pip show:*)",
+      "Bash(where node:*)",
+      "Bash(node -e \"const { execSync } = require\\(''child_process''\\); try { require.resolve\\(''puppeteer''\\); console.log\\(''puppeteer found''\\); } catch\\(e\\) { console.log\\(''not found''\\); }\")",
+      "Bash(npx --yes puppeteer browsers install chrome)",
+      "Bash(node -e \":*)",
+      "Bash(npm install:*)",
+      "Bash(dir \"C:\\\\Users\\\\matte\\\\Downloads\" /b)",
+      "Bash(findstr /i \"meetball\\\\|openclaw\\\\|lobster\\\\|claw\" 2)",
+      "Bash(1 dir:*)",
+      "Read(//c/Users/matte/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/451773d9-f982-424a-a920-01cef7890aa3/daa27835-168b-4f7a-bda0-9ed136b9389f/skills/docx/**)",
+      "Bash(pandoc \"C:/Users/matte/Documents/Claude Code/MiroFish_Portfolio_Document.docx\" -o output.md)",
+      "Bash(python scripts/office/unpack.py \"C:/Users/matte/Documents/Claude Code/MiroFish_Portfolio_Document.docx\" unpacked_mirofish/)",
+      "Bash(ls \"C:/Users/matte/Documents/Claude Code/Scaleform Portfolio/\"*.png \"C:/Users/matte/Documents/Claude Code/Scaleform Portfolio/\"*.PNG)",
+      "Bash(netstat -ano)",
+      "Bash(findstr 3020)",
+      "Bash(taskkill /PID 41956 /F)",
+      "Bash(taskkill /PID 42884 /F)",
+      "Bash(dir \"C:\\\\Users\\\\matte\\\\Documents\\\\Claude Code\\\\Scaleform Portfolio\\\\index.html\")",
+      "Bash(find /c/Users/matte/Documents/Claude Code -maxdepth 2 -name *.html)"
+    ]
+  }
+}
