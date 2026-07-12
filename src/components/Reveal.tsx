@@ -8,7 +8,7 @@ export default function Reveal({
   className,
   delay = 0,
   y = 28,
-  once = false,
+  once = true,
 }: {
   children: ReactNode;
   className?: string;

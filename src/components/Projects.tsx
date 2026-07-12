@@ -25,7 +25,7 @@ function ProjectKeys({ keys, accent }: { keys: Key[]; accent: string }) {
             onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: "-60px" }}
+            viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.55, delay: 0.25 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -3, scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -68,7 +68,7 @@ function Reveal({
     <motion.div
       initial={{ opacity: 0, x, y, filter: "blur(8px)" }}
       whileInView={{ opacity: 1, x: 0, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: false, margin: "-100px" }}
+      viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
@@ -473,7 +473,7 @@ function MockShell({
     <motion.div
       initial={{ opacity: 0, y: 80, rotateX: 14, scale: 0.94 }}
       whileInView={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
-      viewport={{ once: false, margin: "-90px" }}
+      viewport={{ once: true, margin: "-90px" }}
       transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
       style={{ perspective: 1200, transformStyle: "preserve-3d" }}
     >

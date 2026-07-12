@@ -2,23 +2,68 @@
 
 import dynamic from "next/dynamic";
 import { preload } from "react-dom";
+import { useState } from "react";
 import { projects } from "@/lib/projects";
 
-// Soft glow where the sphere will appear, so the scene doesn't pop in from nothing.
-function ScenePlaceholder() {
+// Kick off the (heavy three.js) hero chunk download as soon as this client
+// module evaluates, so it overlaps hydration instead of starting on mount.
+const loadHeroScene = () => import("./hero/HeroScene");
+loadHeroScene();
+
+const HeroScene = dynamic(loadHeroScene, {
+  ssr: false,
+  loading: () => null,
+});
+
+/**
+ * Instant CSS poster of the hero: the glowing sphere + a soft ring hint on cream,
+ * matching the live composition. Painted immediately (no WebGL), it removes the
+ * perceived load gap; the live scene fades in over it and it fades out once ready.
+ * Also serves as the static hero for reduced-motion users (it simply never fades).
+ */
+function HeroPoster() {
+  const cards = Array.from({ length: 8 }, (_, i) => {
+    const a = (i / 8) * Math.PI * 2;
+    const depth = (Math.sin(a) + 1) / 2; // 0 (back) .. 1 (front)
+    return {
+      x: 50 + Math.cos(a) * 30,
+      y: 60 + Math.sin(a) * 15,
+      scale: 0.7 + depth * 0.5,
+      opacity: 0.1 + depth * 0.35,
+    };
+  });
   return (
-    <div className="absolute inset-0 flex items-end justify-center pb-[10vh]">
-      <div className="w-[420px] h-[300px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(45,108,255,0.14),transparent_70%)] blur-2xl" />
+    <div className="absolute inset-0" aria-hidden>
+      {/* bloom */}
+      <div className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[42vw] max-w-[560px] aspect-square rounded-full blur-3xl bg-[radial-gradient(circle,rgba(90,140,255,0.42),transparent_68%)]" />
+      {/* faint ring of cards */}
+      {cards.map((c, i) => (
+        <div
+          key={i}
+          className="absolute w-[7vw] max-w-[92px] aspect-[5/4] rounded-lg blur-[2px] bg-[linear-gradient(160deg,#20304a,#0c1220)]"
+          style={{
+            left: `${c.x}%`,
+            top: `${c.y}%`,
+            transform: `translate(-50%,-50%) scale(${c.scale})`,
+            opacity: c.opacity,
+          }}
+        />
+      ))}
+      {/* sphere */}
+      <div
+        className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[15vw] max-w-[190px] aspect-square rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 42%, #bcd2ff 0%, #4f80ff 34%, #1f47c8 70%, #122a86 100%)",
+        }}
+      />
     </div>
   );
 }
 
-const HeroScene = dynamic(() => import("./hero/HeroScene"), {
-  ssr: false,
-  loading: () => <ScenePlaceholder />,
-});
-
 export default function Hero() {
+  const [sceneReady, setSceneReady] = useState(false);
+
   // Fetch the ring card textures in parallel with the 3D chunk instead of after it.
   for (const p of [projects.mirofish, projects.meetball, projects.tracker, projects.lespot]) {
     if (p.caseImage) preload(p.caseImage, { as: "image" });
@@ -31,7 +76,15 @@ export default function Hero() {
     >
       {/* WebGL scene fills the section, sphere centered in the crown */}
       <div className="absolute inset-0">
-        <HeroScene />
+        <HeroScene onReady={() => setSceneReady(true)} />
+      </div>
+
+      {/* Instant poster on top of the canvas; fades out once the live scene is ready. */}
+      <div
+        className="absolute inset-0 transition-opacity duration-700 ease-out"
+        style={{ opacity: sceneReady ? 0 : 1, pointerEvents: "none" }}
+      >
+        <HeroPoster />
       </div>
 
       {/* Headline sits above the crown, fully legible on cream */}

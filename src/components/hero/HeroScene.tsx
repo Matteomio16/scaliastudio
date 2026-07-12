@@ -1,20 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { Canvas, useThree, type RootState } from "@react-three/fiber";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 import CardRing from "./CardRing";
 import ParticleSphere from "./ParticleSphere";
 import GlowPocket from "./GlowPocket";
 
-function StaticFallback() {
-  return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="w-64 h-64 rounded-full bg-[radial-gradient(circle,rgba(45,108,255,0.25),transparent_70%)]" />
-    </div>
-  );
-}
+// Bloom is split into its own chunk so the base sphere + ring render from a
+// smaller critical bundle; the glow is added a frame later (identical once set).
+const Effects = dynamic(() => import("./Effects"), { ssr: false });
 
 // Camera framing: pulled back + aimed low into the ring so the front cards and
 // their captions sit high enough to leave cream room below before the section's
@@ -49,7 +45,7 @@ function SceneContent() {
   );
 }
 
-export default function HeroScene() {
+export default function HeroScene({ onReady }: { onReady?: () => void }) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -60,13 +56,26 @@ export default function HeroScene() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  if (reducedMotion) return <StaticFallback />;
+  // Reduced motion: skip the WebGL entirely and leave the static poster in place.
+  if (reducedMotion) return null;
+
+  const handleCreated = ({ camera, gl }: RootState) => {
+    aimCamera(camera);
+    // Signal "ready" only after a couple of real frames have painted (sphere,
+    // ring + preloaded textures), so the poster crossfades to a complete scene.
+    if (onReady) {
+      gl.domElement.getContext("webgl2"); // ensure context is live
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => setTimeout(onReady, 350)),
+      );
+    }
+  };
 
   return (
     <div className="absolute inset-0 hero-scene-in">
       <Canvas
         camera={{ position: CAM_POS, fov: 44 }}
-        onCreated={({ camera }: RootState) => aimCamera(camera)}
+        onCreated={handleCreated}
         dpr={[1, 1.8]}
         gl={{
           antialias: true,
@@ -78,15 +87,7 @@ export default function HeroScene() {
       >
         <color attach="background" args={["#faf9f5"]} />
         <SceneContent />
-        <EffectComposer>
-          <Bloom
-            intensity={1.5}
-            luminanceThreshold={1.0}
-            luminanceSmoothing={0.5}
-            mipmapBlur
-            radius={0.85}
-          />
-        </EffectComposer>
+        <Effects />
       </Canvas>
     </div>
   );

@@ -8,7 +8,7 @@ export default function StudioIntro() {
       <motion.p
         initial={{ opacity: 0, y: 34, filter: "blur(8px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: false, margin: "-100px" }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="display-md text-white max-w-4xl"
       >
@@ -17,7 +17,7 @@ export default function StudioIntro() {
       <motion.p
         initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
         whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        viewport={{ once: false, margin: "-100px" }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
         className="body-lg text-dark-on-variant mt-5 max-w-xl"
       >
