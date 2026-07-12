@@ -1,0 +1,349 @@
+/* CSS mock app-UI reproductions ported from the original index.html */
+    /* ── LeSpot ─────────────────────────────────────── */
+    .mock-lespot {
+      background: #000;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ls-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+    }
+    .ls-orb-purple { width:55%; height:70%; top:-10%; left:-5%;   background: rgba(110,25,175,0.45); }
+    .ls-orb-gold   { width:50%; height:60%; bottom:-10%; right:0%; background: rgba(255,175,0,0.38);  }
+    .ls-orb-pink   { width:35%; height:40%; bottom:15%; left:20%; background: rgba(239,72,154,0.22);  }
+    .ls-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .ls-ui {
+      position: relative; z-index: 1;
+      width: 78%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.7rem;
+    }
+    .ls-wordmark {
+      font-family: var(--font-newsreader), serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1;
+      background: linear-gradient(90deg, #9b3dcf 0%, #c97ee0 30%, #e8a000 68%, #ffcc00 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .ls-tagline {
+      font-family: var(--font-inter), sans-serif; font-size: 0.5rem;
+      font-weight: 600; letter-spacing: 0.18em; color: #ffcc00;
+      text-transform: uppercase; margin-top: -0.3rem;
+    }
+    .ls-chips {
+      display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: center;
+    }
+    .ls-chip {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px; padding: 0.2rem 0.55rem;
+      font-family: var(--font-inter), sans-serif; font-size: 0.47rem;
+      font-weight: 500; color: rgba(255,255,255,0.75);
+    }
+    .ls-chip.active {
+      background: linear-gradient(90deg, rgba(155,61,207,0.65), rgba(239,72,154,0.55));
+      border-color: rgba(239,72,154,0.4); color: #fff;
+    }
+    .ls-cta {
+      background: linear-gradient(90deg, #9b3dcf, #ef489a, #e8a000);
+      border-radius: 999px; padding: 0.38rem 1.1rem;
+      font-family: var(--font-inter), sans-serif; font-size: 0.52rem;
+      font-weight: 600; color: #fff; letter-spacing: 0.04em;
+    }
+
+    /* ── Student Life Tracker ────────────────────────── */
+    .mock-tracker {
+      background: #000;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tr-orb { position: absolute; border-radius: 50%; filter: blur(68px); pointer-events: none; }
+    .tr-orb-green { width: 60%; height: 80%; top: -15%; left: -8%; background: rgba(74,222,128,0.30); }
+    .tr-orb-emerald { width: 40%; height: 50%; bottom: -5%; right: 0%; background: rgba(16,185,129,0.22); }
+    .tr-orb-amber { width: 30%; height: 38%; bottom: 10%; right: -5%; background: rgba(255,179,0,0.18); }
+    .tr-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .tr-ui {
+      position: relative; z-index: 1;
+      width: 80%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.65rem;
+    }
+    .tr-wordmark {
+      font-family: var(--font-inter), sans-serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: #fff;
+    }
+    .tr-wm-green { color: #4ade80; }
+    .tr-tagline {
+      font-family: var(--font-inter), sans-serif; font-size: 0.5rem;
+      font-weight: 600; letter-spacing: 0.16em; color: rgba(74,222,128,0.65);
+      text-transform: uppercase; margin-top: -0.35rem;
+    }
+    .tr-score-ring {
+      width: clamp(48px, 8vw, 72px); height: clamp(48px, 8vw, 72px);
+      border-radius: 50%;
+      border: 1.5px solid rgba(74,222,128,0.35);
+      background: rgba(74,222,128,0.07);
+      box-shadow: 0 0 20px rgba(74,222,128,0.12), inset 0 0 12px rgba(74,222,128,0.06);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.05rem;
+    }
+    .tr-score-pct {
+      font-family: var(--font-inter), sans-serif;
+      font-size: clamp(0.75rem, 1.6vw, 1.1rem);
+      font-weight: 700; color: #4ade80; line-height: 1;
+    }
+    .tr-score-sub { font-size: 0.3rem; color: rgba(255,255,255,0.3); letter-spacing: 0.04em; text-transform: uppercase; }
+    .tr-bars { width: 100%; display: flex; flex-direction: column; gap: 0.32rem; }
+    .tr-bar-row { display: flex; align-items: center; gap: 0.4rem; }
+    .tr-bar-name { font-size: 0.36rem; color: rgba(255,255,255,0.38); min-width: 22%; text-align: right; font-family: var(--font-inter), sans-serif; }
+    .tr-bar-track { flex: 1; height: 2px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+    .tr-bar-fill { height: 100%; border-radius: 999px; }
+    .tr-fill-g  { background: #4ade80; }
+    .tr-fill-a  { background: #ffb300; }
+    .tr-fill-y  { background: #facc15; }
+    .tr-bar-pct { font-size: 0.36rem; font-weight: 700; min-width: 18%; font-family: var(--font-inter), sans-serif; }
+
+    /* ── Meetball — sky blue / ochre ── */
+    .mock-meetball {
+      background: #030608;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mb-orb { position: absolute; border-radius: 50%; filter: blur(78px); pointer-events: none; }
+    .mb-orb-teal  { width: 65%; height: 88%; top: -22%; left: -12%; background: rgba(55,130,210,0.48); }
+    .mb-orb-amber { width: 55%; height: 68%; bottom: -22%; right: -10%; background: rgba(195,140,20,0.42); }
+    .mb-orb-coral { width: 32%; height: 42%; top: 5%;  right: 8%;   background: rgba(95,175,230,0.22); }
+    .mb-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .mb-ui {
+      position: relative; z-index: 1;
+      width: 82%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.65rem;
+    }
+    .mb-wordmark {
+      font-family: var(--font-pirata), cursive;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      line-height: 1; letter-spacing: 0.03em;
+      background: linear-gradient(100deg, #7dc4e8 0%, #c8a020 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .mb-tagline {
+      font-family: var(--font-inter), sans-serif; font-size: 0.48rem;
+      font-weight: 600; letter-spacing: 0.18em;
+      color: rgba(205,160,40,0.72); text-transform: uppercase;
+      margin-top: -0.3rem;
+    }
+    .mb-chips { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: center; }
+    .mb-chip {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 999px; padding: 0.2rem 0.55rem;
+      font-family: var(--font-inter), sans-serif; font-size: 0.44rem;
+      font-weight: 500; color: rgba(255,255,255,0.55);
+    }
+    .mb-chip.lit {
+      background: rgba(55,130,210,0.20); border-color: rgba(100,175,235,0.38);
+      color: rgba(145,210,245,0.92);
+    }
+    .mb-stat {
+      font-family: var(--font-inter), sans-serif; font-size: 0.44rem;
+      font-weight: 500; letter-spacing: 0.10em;
+      color: rgba(255,255,255,0.22); text-transform: uppercase;
+    }
+
+    /* ── OpenClaw — deep red / AI agents ── */
+    .mock-openclaw {
+      background: #080101;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .oc-orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
+    .oc-orb-teal1 { width: 65%; height: 130%; top: -30%; left: -5%;  background: rgba(180,8,8,0.58); }
+    .oc-orb-teal2 { width: 45%; height: 90%;  bottom: -35%; right: -5%; background: rgba(220,55,15,0.32); }
+    .oc-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.013) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.013) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .oc-ui {
+      position: relative; z-index: 1;
+      width: 88%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.7rem;
+    }
+    .oc-wordmark-row { display: flex; align-items: center; gap: 0.55rem; }
+    .oc-logo-img {
+      height: clamp(28px, 3.5vw, 44px); width: auto; flex-shrink: 0;
+      filter: drop-shadow(0 0 10px rgba(255,60,40,0.55));
+    }
+    .oc-wordmark {
+      font-family: var(--font-inter), sans-serif;
+      font-size: clamp(1.6rem, 3.8vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: #fff;
+    }
+    .oc-wm-accent { color: #ff3c3c; text-shadow: 0 0 30px rgba(255,60,60,0.60); }
+    .oc-subtitle {
+      font-family: var(--font-inter), sans-serif;
+      font-size: clamp(0.34rem, 0.65vw, 0.48rem);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,110,80,0.50); margin-top: -0.25rem;
+    }
+    .oc-cases { display: flex; gap: 0.48rem; width: 100%; }
+    .oc-case {
+      flex: 1; display: flex; flex-direction: column; gap: 0.28rem;
+      padding: 0.42rem 0.55rem;
+      border: 1px solid rgba(255,60,40,0.16);
+      border-top: 2px solid rgba(255,60,40,0.72);
+      background: rgba(255,30,10,0.06);
+    }
+    .oc-case-mid { border-top-color: rgba(255,60,40,0.45); background: rgba(255,30,10,0.04); }
+    .oc-case-dim { border-top-color: rgba(255,60,40,0.26); background: rgba(255,30,10,0.02); }
+    .oc-case-num {
+      font-family: var(--font-inter), sans-serif; font-size: 0.28rem;
+      font-weight: 700; letter-spacing: 0.10em;
+      color: rgba(255,80,60,0.45);
+    }
+    .oc-case-label {
+      font-family: var(--font-inter), sans-serif;
+      font-size: clamp(0.30rem, 0.58vw, 0.43rem);
+      font-weight: 600; line-height: 1.35;
+      color: rgba(255,255,255,0.82);
+    }
+    .oc-bottom {
+      font-family: var(--font-inter), sans-serif; font-size: 0.44rem;
+      font-weight: 500; letter-spacing: 0.10em;
+      color: rgba(255,255,255,0.20); text-transform: uppercase;
+    }
+
+    /* ── MiroFish Card Layout ── */
+    .mf-section-header { padding: 2.5rem 0 1rem; text-align: center; color: var(--on-surface-variant); }
+    .mf-row { display: block; }
+    .mf-card { background: var(--surface-container); transition: opacity 200ms var(--ease); display: flex; flex-direction: row; align-items: stretch; }
+    .mf-card:hover { opacity: 0.92; }
+    .mf-img { aspect-ratio: 16/7; width: 60%; flex-shrink: 0; overflow: hidden; }
+    .mf-card-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 0.55rem; padding: 1.75rem 1.5rem; }
+    /* Right-column context block */
+    .mf-context { display: flex; flex-direction: column; gap: 1.25rem; padding-top: 0.25rem; }
+    .mf-context-eyebrow { color: var(--on-surface-variant); margin-bottom: -0.5rem; }
+    .mf-context-heading { font-family: var(--font-newsreader), serif; font-size: clamp(1.3rem, 2.4vw, 1.75rem); font-weight: 400; line-height: 1.25; color: var(--on-surface); font-style: italic; }
+    .mf-context-body { font-family: var(--font-inter), sans-serif; font-size: 0.9rem; line-height: 1.7; color: var(--on-surface-variant); }
+    .mf-context-body strong { color: var(--on-surface); font-weight: 600; }
+    .mf-context-divider { width: 2rem; height: 1px; background: var(--primary); opacity: 0.4; }
+    .mf-context-stat { display: flex; flex-direction: column; gap: 0.15rem; }
+    .mf-context-stat-num { font-family: var(--font-newsreader), serif; font-size: 2.2rem; font-weight: 700; color: #4da8ff; line-height: 1; }
+    .mf-context-stat-lbl { font-family: var(--font-inter), sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; color: var(--on-surface-variant); }
+    .mf-context-stats { display: flex; gap: 2rem; }
+    @media (max-width: 768px) {
+      .mf-row { grid-template-columns: 1fr; }
+      .mf-card { flex-direction: column; }
+      .mf-img { width: 100%; aspect-ratio: 16/7; }
+      .legacy-card { flex-direction: column; }
+      .legacy-img-wide { width: 100%; aspect-ratio: 16/7; }
+    }
+
+    /* ── MiroFish Mock Image — deep ocean / swarm ── */
+    .mock-mirofish {
+      background: #010610;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mf-orb { position: absolute; border-radius: 50%; filter: blur(88px); pointer-events: none; }
+    .mf-orb-blue { width: 70%; height: 120%; top: -30%; left: -10%; background: rgba(18,60,210,0.50); }
+    .mf-orb-cyan { width: 48%; height: 80%; bottom: -30%; right: -5%;  background: rgba(0,200,220,0.32); }
+    .mf-orb-mid  { width: 30%; height: 45%; top: 10%;  right: 15%;    background: rgba(60,100,255,0.18); }
+    .mf-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,150,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,255,0.015) 1px, transparent 1px);
+      background-size: 52px 52px;
+    }
+    .mf-ui {
+      position: relative; z-index: 1; width: 92%;
+      display: flex; flex-direction: column; align-items: center; gap: 0.65rem;
+      text-align: center;
+    }
+    /* Logo header row inside mock */
+    .mf-logo-header { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; }
+    .mf-logo-img {
+      height: clamp(42px, 6.5vw, 78px); width: auto; flex-shrink: 0;
+      filter: drop-shadow(0 0 14px rgba(0,180,255,0.7));
+    }
+    .mf-logo-tagline {
+      font-family: var(--font-inter), sans-serif; font-size: clamp(0.26rem, 0.48vw, 0.38rem);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(0,190,220,0.55);
+    }
+    /* Editorial content inside MiroFish mock */
+    .mf-editorial { display: flex; flex-direction: column; align-items: center; gap: 0.42rem; width: 100%; }
+    .mf-edit-eye {
+      font-family: var(--font-inter), sans-serif; font-size: clamp(0.26rem, 0.46vw, 0.35rem);
+      font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(0,200,230,0.55);
+    }
+    .mf-edit-headline {
+      font-family: var(--font-newsreader), serif; font-style: italic;
+      font-size: clamp(0.72rem, 1.35vw, 1.10rem); font-weight: 400;
+      color: #ffffff; line-height: 1.25;
+    }
+    .mf-edit-div { width: 1.5rem; height: 1px; background: rgba(77,168,255,0.45); margin: 0.1rem auto; }
+    .mf-edit-body {
+      font-family: var(--font-inter), sans-serif; font-size: clamp(0.24rem, 0.45vw, 0.35rem);
+      line-height: 1.6; color: rgba(255,255,255,0.50);
+    }
+    .mf-edit-stats { display: flex; justify-content: center; gap: clamp(0.8rem, 2vw, 2rem); margin-top: 0.25rem; }
+    .mf-edit-stat-n {
+      font-family: var(--font-newsreader), serif; font-size: clamp(0.80rem, 1.5vw, 1.20rem);
+      font-weight: 700; color: #4da8ff; display: block; line-height: 1;
+    }
+    .mf-edit-stat-l {
+      font-family: var(--font-inter), sans-serif; font-size: clamp(0.20rem, 0.38vw, 0.29rem);
+      color: rgba(255,255,255,0.38); letter-spacing: 0.06em; display: block; margin-top: 0.1rem;
+    }
+    .mf-tagline {
+      font-family: var(--font-inter), sans-serif; font-size: clamp(0.32rem, 0.60vw, 0.44rem);
+      font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(0,200,230,0.52); margin-top: -0.2rem;
+    }
+    /* Agent swarm dots */
+    .mf-swarm { position: relative; width: 90%; height: clamp(28px, 3.5vw, 40px); }
+    .mf-dot {
+      position: absolute; width: 3px; height: 3px; border-radius: 50%;
+      background: #00d4ff; box-shadow: 0 0 6px rgba(0,212,255,0.85), 0 0 14px rgba(0,212,255,0.35);
+    }
+    .mf-dot.dim { background: rgba(0,212,255,0.38); box-shadow: 0 0 4px rgba(0,212,255,0.32); }
+    .mf-dot.lead { background: #fff; width: 5px; height: 5px; box-shadow: 0 0 8px rgba(0,212,255,1), 0 0 22px rgba(0,212,255,0.55); }
+    .mf-d1{left:8%;top:58%} .mf-d2{left:16%;top:25%} .mf-d3{left:23%;top:70%}
+    .mf-d4{left:30%;top:40%} .mf-d5{left:38%;top:65%} .mf-d6{left:45%;top:20%}
+    .mf-d7{left:52%;top:50%} .mf-d8{left:58%;top:75%} .mf-d9{left:65%;top:32%}
+    .mf-d10{left:72%;top:62%} .mf-d11{left:79%;top:22%} .mf-d12{left:85%;top:55%} .mf-d13{left:92%;top:38%}
+    /* Use-case chips */
+    .mf-uses { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; }
+    .mf-use {
+      display: flex; align-items: center; gap: 0.3rem;
+      padding: 0.22rem 0.55rem;
+      border: 1px solid rgba(77,168,255,0.28); background: rgba(20,80,200,0.14);
+      font-family: var(--font-inter), sans-serif; font-size: clamp(0.30rem, 0.55vw, 0.42rem);
+      font-weight: 600; letter-spacing: 0.06em; color: rgba(180,225,255,0.88);
+    }
+    .mf-use-icon { font-size: clamp(0.40rem, 0.75vw, 0.55rem); }

@@ -3,10 +3,10 @@
   "configurations": [
     {
       "name": "scaleform-portfolio",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", ".", "-l", "3030"],
-      "port": 3030,
-      "autoPort": false
+      "runtimeExecutable": "C:\\Windows\\System32\\cmd.exe",
+      "runtimeArgs": ["/c", "C:\\Users\\matte\\Documents\\CLAUDE\\Scalia\\scripts\\dev.cmd"],
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

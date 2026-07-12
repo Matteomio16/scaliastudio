@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Simulation of Democracy — MiroFish · Scalia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* LIGHT MODE (default) */
+    :root {
+      --bg:        #f4f3ef;
+      --surface:   #eceae5;
+      --surface2:  #e4e2dc;
+      --border:    rgba(0,0,0,0.09);
+      --text:      #1a1c1a;
+      --muted:     rgba(26,28,26,0.50);
+      --accent:    #1a6bbf;
+      --accent2:   #1a7a8a;
+      --tisza:     #2563eb;
+      --fidesz:    #dc2626;
+      --dk:        #d97706;
+      --mkkp:      #059669;
+      --nav-bg:    rgba(244,243,239,0.90);
+      --insight-bg: rgba(26,107,191,0.07);
+      --insight-border: rgba(26,107,191,0.22);
+      --tr-highlight: rgba(26,107,191,0.05);
+      --td-border: rgba(0,0,0,0.05);
+    }
+
+    /* DARK MODE */
+    [data-theme="dark"] {
+      --bg:        #0a0c10;
+      --surface:   #111318;
+      --surface2:  #181c22;
+      --border:    rgba(255,255,255,0.07);
+      --text:      #e8eaf0;
+      --muted:     rgba(232,234,240,0.52);
+      --accent:    #4da8ff;
+      --accent2:   #7ec8e3;
+      --tisza:     #3b82f6;
+      --fidesz:    #ef4444;
+      --dk:        #f59e0b;
+      --mkkp:      #10b981;
+      --nav-bg:    rgba(10,12,16,0.85);
+      --insight-bg: rgba(77,168,255,0.07);
+      --insight-border: rgba(77,168,255,0.22);
+      --tr-highlight: rgba(77,168,255,0.05);
+      --td-border: rgba(255,255,255,0.04);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Times New Roman', Times, serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background 250ms, color 250ms;
+    }
+
+    /* NAV */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 56px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: background 250ms;
+    }
+    .nav-left { display: flex; align-items: center; gap: 1.5rem; }
+    .nav-back {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--muted); text-decoration: none; text-transform: uppercase;
+      transition: color 200ms;
+    }
+    .nav-back:hover { color: var(--text); }
+    .nav-tag {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.10em;
+      text-transform: uppercase; color: var(--accent); opacity: 0.8;
+    }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    /* Dark mode toggle */
+    .theme-toggle {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      cursor: pointer; transition: background 200ms;
+      font-size: 1rem; line-height: 1;
+      color: var(--text);
+    }
+    .theme-toggle:hover { background: var(--surface2); }
+
+    /* LAYOUT */
+    .page { padding-top: 56px; }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 3rem);
+    }
+
+    /* HERO */
+    .hero {
+      padding: clamp(4rem, 8vw, 7rem) 0 clamp(2.5rem, 5vw, 4rem);
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow img {
+      height: 28px; width: auto;
+      filter: drop-shadow(0 0 8px rgba(77,168,255,0.5));
+    }
+    .eyebrow-text {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .hero h1 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400; line-height: 1.15;
+      color: var(--text); margin-bottom: 1.25rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent2); }
+    .hero-meta {
+      font-size: 0.78rem; color: var(--muted);
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .hero-meta span::before { content: '·'; margin-right: 1.5rem; }
+    .hero-meta span:first-child::before { content: ''; margin-right: 0; }
+    .hero-abstract {
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      line-height: 1.75; color: var(--muted);
+      max-width: 700px; margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent); color: #0a0c10;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; text-decoration: none;
+      border-radius: 6px; transition: opacity 200ms;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: transparent; color: var(--text);
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; text-decoration: none;
+      border: 1px solid var(--border); border-radius: 6px;
+      transition: background 200ms;
+    }
+    .btn-secondary:hover { background: var(--surface2); }
+
+    /* DIVIDER */
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: clamp(2.5rem, 5vw, 4rem) 0;
+    }
+
+    /* STAT STRIP */
+    .stat-strip {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    }
+    .stat-item {
+      flex: 1;
+      background: var(--surface);
+      padding: 1.25rem 0.75rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+      min-width: 0;
+      transition: background 250ms;
+    }
+    .stat-n {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+      font-weight: 600; color: var(--accent);
+      line-height: 1; white-space: nowrap;
+      text-align: center;
+    }
+    .stat-l {
+      font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted); white-space: normal;
+      text-align: center; line-height: 1.4;
+    }
+
+    /* SECTIONS */
+    .section { margin-bottom: clamp(3rem, 6vw, 5rem); }
+    .section-label {
+      font-size: 0.66rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.25rem;
+    }
+    .section h2 {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      font-weight: 400; color: var(--text);
+      margin-bottom: 1rem; line-height: 1.3;
+    }
+    .section p {
+      font-size: 0.95rem; line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    /* RESULT TABLE */
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .result-card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.66rem; font-weight: 600;
+      letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+    }
+    th {
+      padding: 0.65rem 1.25rem;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--muted); text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.88rem; color: var(--text);
+      border-bottom: 1px solid var(--td-border);
+    }
+    tr:last-child td { border-bottom: none; }
+    .party-dot {
+      display: inline-block;
+      width: 8px; height: 8px; border-radius: 50%;
+      margin-right: 0.5rem; flex-shrink: 0;
+    }
+    .td-party { display: flex; align-items: center; }
+    .td-seats { font-family: 'Times New Roman', Times, serif; font-weight: 600; font-size: 1rem; }
+    .td-majority {
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--accent); padding-left: 0.5rem;
+    }
+    .tr-highlight td { background: var(--tr-highlight); }
+    .tr-total td {
+      border-top: 1px solid var(--border);
+      font-weight: 600; color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* SENSITIVITY */
+    .sensitivity-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 1.5rem 0;
+    }
+    @media (max-width: 600px) { .sensitivity-grid { grid-template-columns: 1fr; } }
+    .sensitivity-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .sensitivity-card.critical { border-color: rgba(77,168,255,0.35); }
+    .sensitivity-label {
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.6rem;
+    }
+    .sensitivity-val {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.8rem; font-weight: 600;
+      color: var(--accent); line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .sensitivity-desc {
+      font-size: 0.78rem; color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* INSIGHT BOX */
+    .insight-box {
+      background: var(--insight-bg);
+      border: 1px solid var(--insight-border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .insight-box p {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin: 0;
+    }
+
+    /* FOOTNOTE */
+    .footnote {
+      font-size: 0.78rem; color: var(--muted);
+      line-height: 1.6; padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: clamp(3rem, 6vw, 5rem);
+    }
+
+    /* PDF EMBED */
+    .pdf-section {
+      margin: clamp(2.5rem, 5vw, 4rem) 0;
+    }
+    .pdf-embed-wrap {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .pdf-embed-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .pdf-embed-title {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    }
+    .pdf-embed-wrap iframe {
+      width: 100%; height: 75vh;
+      display: block; border: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-left">
+      <a class="nav-back" href="index.html">← Back to Portfolio</a>
+    </div>
+    <div class="nav-right">
+      <span class="nav-tag">MiroFish · Research</span>
+      <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="container">
+
+      <!-- HERO -->
+      <header class="hero">
+        <div class="hero-eyebrow">
+          <img src="mirofish_logo.png" alt="MiroFish"/>
+          <span class="eyebrow-text">MiroFish · Swarm Intelligence Research</span>
+        </div>
+        <h1>The Simulation of<br><em>Democracy</em></h1>
+        <div class="hero-meta">
+          <span>Matteo Mio</span>
+          <span>April 2026</span>
+          <span>Hungarian Electoral Prediction</span>
+        </div>
+        <p class="hero-abstract">
+          45 AI agents. 100 simulation rounds. 1,965 discrete social interactions. A full multi-agent AI simulation of Hungary's 2026 parliamentary election — with no polling data used as input. The prediction emerges entirely from collective behaviour.
+        </p>
+        <div class="hero-actions">
+          <a href="simulation-of-democracy.pdf" download class="btn-primary">
+            ↓ Download Full Paper
+          </a>
+          <a href="#results" class="btn-secondary">View Results →</a>
+        </div>
+      </header>
+
+      <hr class="divider"/>
+
+      <!-- STAT STRIP -->
+      <div class="stat-strip">
+        <div class="stat-item">
+          <span class="stat-n">45</span>
+          <span class="stat-l">AI Agents</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-n">1,965</span>
+          <span class="stat-l">Agent Interactions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-n">143M</span>
+          <span class="stat-l">Tokens Used</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-n">$7.95</span>
+          <span class="stat-l">Total API Cost</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-n">11</span>
+          <span class="stat-l">Bias Corrections</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-n">48h</span>
+          <span class="stat-l">Compute Time</span>
+        </div>
+      </div>
+
+      <!-- WHAT IS THIS -->
+      <section class="section">
+        <p class="section-label">The Experiment</p>
+        <h2>Polling captures a snapshot. This simulates the process.</h2>
+        <p>
+          Standard polls cannot model how a rural pensioner's vote shifts after weeks of state television, or the strategic calculation of a DK supporter in a marginal Budapest constituency who knows their candidate cannot win. MiroFish addresses this gap by instantiating AI-powered agents representing distinct voter archetypes, letting them interact, form opinions, and arrive at vote intentions through simulated social dynamics — with no polling data used as an anchor.
+        </p>
+        <p>
+          Hungary's April 2026 election is the most competitive since 2010 — a genuine contest between Fidesz and TISZA (Péter Magyar's party) on a structurally asymmetric field of gerrymandered constituencies and state media dominance. Research question posed to the simulation: <em>"How do different voter segments form their final voting decision — and what aggregate outcome does that produce?"</em>
+        </p>
+        <div class="insight-box">
+          <p>"The experiment was run by a 21-year-old student with no data science background, in the middle of LSE exam revision, on less than $10 in API credits."</p>
+        </div>
+      </section>
+
+      <!-- METHODOLOGY -->
+      <section class="section">
+        <p class="section-label">Methodology</p>
+        <h2>Architecture & stack</h2>
+        <p>
+          The simulation runs on MiroFish — a platform built on CAMEL-AI and OASIS for the agent layer, Gemini 2.5 Flash Lite via OpenRouter for all reasoning calls, and Neo4j AuraDB as the shared knowledge graph. Agents were seeded with six structured documents covering the Hungarian electoral system, party platforms, the media environment, economic grievances, and demographic profiles — but explicitly not with polling results.
+        </p>
+        <p>
+          After the simulation run, InsightForge (MiroFish's reporting layer) produced an initial output. This was followed by a deep interaction phase — structured surveys sent to individual agents to extract vote share estimates by segment. The raw output then passed through <strong>eleven documented bias corrections</strong> under a two-layer epistemic recalibration framework before final vote shares were accepted.
+        </p>
+        <p>
+          Constituency-level seat modelling was handled by Chronicler-v2, calibrated to a strategic transfer rate (lambda = 0.58) from DK and MKKP voters to TISZA in competitive single-member districts.
+        </p>
+      </section>
+
+      <!-- RESULTS -->
+      <section class="section" id="results">
+        <p class="section-label">Final Results</p>
+        <h2>Final 199-seat parliament</h2>
+        <p>TISZA wins a governing majority by a single seat. Fidesz drops 51 seats from 2022. The result lands within 1pp of independent polling — without having been anchored to it at any point.</p>
+
+        <div class="result-card">
+          <div class="result-card-header">Seat Projection — 199 Seats</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Party</th>
+                <th>SMD</th>
+                <th>List</th>
+                <th>Total</th>
+                <th>Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tr-highlight">
+                <td><div class="td-party"><span class="party-dot" style="background:var(--tisza)"></span>TISZA</div></td>
+                <td>66</td>
+                <td>35</td>
+                <td class="td-seats">101</td>
+                <td>50.8% <span class="td-majority">Majority</span></td>
+              </tr>
+              <tr>
+                <td><div class="td-party"><span class="party-dot" style="background:var(--fidesz)"></span>Fidesz-KDNP</div></td>
+                <td>38</td>
+                <td>46</td>
+                <td class="td-seats">84</td>
+                <td>42.2%</td>
+              </tr>
+              <tr>
+                <td><div class="td-party"><span class="party-dot" style="background:var(--dk)"></span>DK</div></td>
+                <td>1</td>
+                <td>6</td>
+                <td class="td-seats">7</td>
+                <td>3.5%</td>
+              </tr>
+              <tr>
+                <td><div class="td-party"><span class="party-dot" style="background:var(--mkkp)"></span>MKKP</div></td>
+                <td>0</td>
+                <td>5</td>
+                <td class="td-seats">5</td>
+                <td>2.5%</td>
+              </tr>
+              <tr>
+                <td><div class="td-party"><span class="party-dot" style="background:#888"></span>Other</div></td>
+                <td>1</td>
+                <td>1</td>
+                <td class="td-seats">2</td>
+                <td>1.0%</td>
+              </tr>
+              <tr class="tr-total">
+                <td>Total</td>
+                <td>106</td>
+                <td>93</td>
+                <td>199</td>
+                <td>100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>TISZA reaches the bare majority threshold of 100 seats — enough to form government and pass ordinary legislation, but not enough to change the constitution (requires 133). Fidesz remains the largest party by vote share at 41.0% but loses their supermajority era. TISZA wins 66 SMDs not because it is nationally more popular, but because opposition votes consolidate behind a single candidate in enough constituencies.</p>
+      </section>
+
+      <!-- SENSITIVITY -->
+      <section class="section">
+        <p class="section-label">Sensitivity Analysis</p>
+        <h2>The decisive variable: lambda</h2>
+        <p>Lambda (λ) is the strategic transfer rate — the share of DK and MKKP voters who tactically back TISZA in competitive single-member districts. It is the single variable that most determines the outcome.</p>
+        <div class="sensitivity-grid">
+          <div class="sensitivity-card">
+            <div class="sensitivity-label">Tipping point — TISZA majority</div>
+            <div class="sensitivity-val">λ = 0.57</div>
+            <div class="sensitivity-desc">TISZA gains majority only when lambda crosses 0.57. At λ = 0.55, they finish at 99 seats — one short.</div>
+          </div>
+          <div class="sensitivity-card critical">
+            <div class="sensitivity-label">Calibrated estimate</div>
+            <div class="sensitivity-val">λ = 0.58</div>
+            <div class="sensitivity-desc">TISZA 101 seats. Bare majority. One seat margin. Fidesz loses majority when lambda exceeds 0.20.</div>
+          </div>
+          <div class="sensitivity-card">
+            <div class="sensitivity-label">If Fidesz overperforms +2pp</div>
+            <div class="sensitivity-val">95–97</div>
+            <div class="sensitivity-desc">TISZA falls short of majority. Hung parliament — without precedent in modern Hungary.</div>
+          </div>
+          <div class="sensitivity-card">
+            <div class="sensitivity-label">If TISZA underperforms −2pp</div>
+            <div class="sensitivity-val">Hung</div>
+            <div class="sensitivity-desc">Similar 4–6 seat shift. Hung parliament becomes the central scenario.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DOWNLOAD / EMBED -->
+      <section class="pdf-section">
+        <p class="section-label">Full Paper</p>
+        <div class="pdf-embed-wrap">
+          <div class="pdf-embed-header">
+            <span class="pdf-embed-title">The Simulation of Democracy — Full Research Paper</span>
+            <a href="simulation-of-democracy.pdf" download class="btn-primary" style="padding:0.5rem 1rem;font-size:0.68rem;">↓ Download PDF</a>
+          </div>
+          <iframe src="simulation-of-democracy.pdf" title="The Simulation of Democracy"></iframe>
+        </div>
+      </section>
+
+      <p class="footnote">
+        Research by Matteo Mio · Forward College / University of London (LSE program) · April 2026 · Built with MiroFish, CAMEL-AI, OASIS, Neo4j AuraDB, Gemini 2.5 Flash Lite · Total cost: under $9 · Part of the Scalia builder studio research track.
+      </p>
+
+    </div>
+  </div>
+  <script>
+    const btn = document.getElementById('theme-toggle');
+    const moon = document.getElementById('icon-moon');
+    const sun = document.getElementById('icon-sun');
+    const html = document.documentElement;
+    btn.addEventListener('click', () => {
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      moon.style.display = isDark ? 'block' : 'none';
+      sun.style.display = isDark ? 'none' : 'block';
+    });
+  </script>
+</body>
+</html>

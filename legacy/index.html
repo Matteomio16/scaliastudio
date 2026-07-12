@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Scaleform — Independent builder studio. Two students crafting AI-native tools and automation systems."/>
+  <title>SCALEFORM | Independent Builder Studio</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Pirata+One&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
+    :root {
+      --surface:                  #faf9f5;
+      --surface-container-lowest: #ffffff;
+      --surface-container-low:    #f3f1ec;
+      --surface-container:        #edeae4;
+      --surface-container-high:   #e7e5df;
+      --surface-container-highest:#e1ded8;
+      --on-surface:               #1b1c1a;
+      --on-surface-variant:       #44483f;
+      --outline-variant:          #c4c8ba;
+      --primary:                  #004f54;
+      --primary-container:        #01696f;
+      --on-primary:               #ffffff;
+      --tertiary:                 #735c00;
+
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --transition: 220ms var(--ease);
+    }
+
+    /* =====================================================
+       RESET & BASE
+    ===================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--surface);
+      color: var(--on-surface);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+
+    /* =====================================================
+       TYPE SCALE
+    ===================================================== */
+    .display-lg {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+    .display-md {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .headline-lg {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .body-lg {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .label-sm {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* =====================================================
+       LAYOUT UTILITIES
+    ===================================================== */
+    .page-pad {
+      padding-left: clamp(1.25rem, 5vw, 3rem);
+      padding-right: clamp(1.25rem, 5vw, 3rem);
+    }
+
+    /* =====================================================
+       NAVIGATION
+    ===================================================== */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 56px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 clamp(1.25rem, 5vw, 3rem);
+      background: rgba(250, 249, 245, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-wordmark {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .nav-wordmark img {
+      height: 38px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .nav-link {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8125rem;
+      font-weight: 400;
+      color: var(--on-surface-variant);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .nav-link:hover { color: var(--primary); }
+    .nav-link.is-active {
+      color: var(--primary);
+      border-bottom: 1px solid var(--primary);
+      padding-bottom: 2px;
+    }
+
+    .nav-contact {
+      border: 1px solid rgba(196, 200, 186, 0.25);
+      padding: 0.35rem 0.85rem;
+      transition: background var(--transition);
+    }
+    .nav-contact:hover { background: var(--surface-container); color: var(--on-surface); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--on-surface);
+      transition: var(--transition);
+    }
+
+    /* Mobile overlay */
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms var(--ease);
+    }
+    .mobile-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-overlay-link {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--on-surface);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .mobile-overlay-link:hover { color: var(--primary); }
+    .mobile-close {
+      position: absolute;
+      top: 1rem;
+      right: clamp(1.25rem, 5vw, 3rem);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.75rem;
+      color: var(--on-surface);
+      line-height: 1;
+      padding: 0.5rem;
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 56px;
+      padding-bottom: clamp(3rem, 6vw, 5rem);
+      position: relative;
+    }
+
+    .hero-meta {
+      color: var(--on-surface-variant);
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-h1 { color: var(--on-surface); }
+
+    .hero-italic {
+      color: var(--primary);
+      font-style: italic;
+      display: block;
+    }
+
+    .cursor {
+      display: inline-block;
+      color: var(--primary);
+      animation: blink 1s step-end infinite;
+      font-style: normal;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero-sub {
+      margin-top: 1.5rem;
+      color: var(--on-surface-variant);
+      max-width: 480px;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 1;
+      transition: opacity 400ms ease;
+      animation: bob 2s ease-in-out infinite;
+    }
+    .scroll-cue.gone { opacity: 0; }
+    @keyframes bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(5px); }
+    }
+
+    /* Hero project sneak peek */
+    .hero-preview {
+      position: absolute;
+      top: 56px;
+      left: 0; right: 0;
+      bottom: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0.47;
+      -webkit-mask-image:
+        linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, black 18%, black 72%, transparent 100%);
+      -webkit-mask-composite: destination-in;
+      mask-image:
+        linear-gradient(to right, transparent 0%, black 9%, black 91%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, black 18%, black 72%, transparent 100%);
+      mask-composite: intersect;
+    }
+    .hero-preview-track {
+      display: flex;
+      gap: 1.25rem;
+      align-items: stretch;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .hp-card {
+      flex-shrink: 0;
+      width: clamp(170px, 17vw, 260px);
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .hp-card-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 0.85rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%);
+    }
+    .hp-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem; font-weight: 600;
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.05em;
+    }
+    .hp-cat {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.53rem; font-weight: 500;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+    /* Per-card backgrounds matching real project palettes */
+    .hp-lespot {
+      background:
+        radial-gradient(ellipse at 38% 28%, rgba(30,100,200,0.55) 0%, transparent 58%),
+        radial-gradient(ellipse at 72% 65%, rgba(10,60,140,0.35) 0%, transparent 55%),
+        #060d1a;
+    }
+    .hp-tracker {
+      background:
+        radial-gradient(ellipse at 55% 35%, rgba(20,140,60,0.45) 0%, transparent 58%),
+        radial-gradient(ellipse at 30% 70%, rgba(10,80,30,0.3) 0%, transparent 55%),
+        #050d07;
+    }
+    .hp-meetball {
+      background:
+        radial-gradient(ellipse at 35% 32%, rgba(55,130,210,0.48) 0%, transparent 55%),
+        radial-gradient(ellipse at 72% 58%, rgba(195,140,20,0.42) 0%, transparent 52%),
+        #030608;
+    }
+    .hp-mirofish {
+      background:
+        radial-gradient(ellipse at 32% 32%, rgba(20,55,180,0.52) 0%, transparent 58%),
+        radial-gradient(ellipse at 70% 60%, rgba(0,130,220,0.35) 0%, transparent 55%),
+        #050810;
+    }
+    .hp-openclaw {
+      background:
+        radial-gradient(ellipse at 50% 38%, rgba(180,8,8,0.58) 0%, transparent 62%),
+        #080101;
+    }
+
+    /* =====================================================
+       TOOLKIT SECTION
+    ===================================================== */
+    .toolkit {
+      padding: clamp(2.5rem, 5vw, 4rem) 0;
+      overflow: hidden;
+      background: var(--surface-container-low);
+      position: relative;
+    }
+    .toolkit::before,
+    .toolkit::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 2.5rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .toolkit::before {
+      top: 0;
+      background: linear-gradient(to bottom, var(--surface) 0%, transparent 100%);
+    }
+    .toolkit::after {
+      bottom: 0;
+      background: linear-gradient(to top, var(--surface) 0%, transparent 100%);
+    }
+    .toolkit-header {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      align-items: baseline;
+      margin-bottom: 2.5rem;
+      color: var(--on-surface-variant);
+      padding: 0 var(--pad-x, 3rem);
+    }
+    .toolkit-track-wrap {
+      position: relative;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .toolkit-track-wrap:hover .toolkit-track {
+      animation-play-state: paused;
+    }
+    @keyframes toolkit-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .toolkit-track {
+      display: flex;
+      gap: 0;
+      padding: 0.5rem 0 1rem;
+      width: max-content;
+      animation: toolkit-scroll 32s linear infinite;
+    }
+    .tool-card {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 1rem 2.2rem;
+      cursor: default;
+      border-right: 1px solid rgba(180,180,170,0.09);
+      transition: opacity 200ms var(--ease);
+    }
+    .tool-card:last-child { border-right: none; }
+    .tool-card:hover { opacity: 0.7; }
+    .tool-logo {
+      width: clamp(36px, 4.2vw, 58px);
+      height: clamp(36px, 4.2vw, 58px);
+      object-fit: contain;
+    }
+    .tool-name {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.68rem, 0.9vw, 0.82rem);
+      font-weight: 600;
+      color: var(--on-surface);
+      text-align: center;
+      line-height: 1.2;
+    }
+    .tool-cat {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.52rem;
+      font-weight: 500;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      text-align: center;
+    }
+    .claude-icon {
+      width: clamp(36px, 4.2vw, 58px);
+      height: clamp(36px, 4.2vw, 58px);
+      border-radius: 50%;
+      background: #d97757;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.9rem, 1.3vw, 1.3rem);
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================
+       PROJECTS
+    ===================================================== */
+    .projects {
+      padding-top: clamp(4rem, 8vw, 7rem);
+      padding-bottom: clamp(4rem, 8vw, 7rem);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+      color: var(--on-surface-variant);
+      text-align: center;
+    }
+
+    /* Row 1: 58 / 40 grid */
+    .row1 {
+      display: grid;
+      grid-template-columns: 58% 40%;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+
+    /* === FEATURED / PROJECT REVEAL === */
+    .featured-card {
+      background: var(--surface-container-lowest);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .featured-card:hover { background: var(--surface-container-low); }
+    .featured-card:hover { box-shadow: 0 20px 40px rgba(27,28,26,0.06); }
+
+    .featured-img {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.25rem;
+      z-index: 2;
+      color: var(--primary);
+    }
+
+    /* Project Reveal: name overlaps bottom edge of image */
+    .project-reveal-name {
+      position: relative;
+      z-index: 2;
+      margin-top: -1rem;
+      padding: 0 1.25rem;
+      background: var(--surface-container-lowest);
+      transition: background var(--transition);
+    }
+    .featured-card:hover .project-reveal-name { background: var(--surface-container-low); }
+
+    .featured-info {
+      padding: 0.5rem 1.25rem 1.5rem;
+      background: var(--surface-container-lowest);
+      transition: background var(--transition);
+    }
+    .featured-card:hover .featured-info { background: var(--surface-container-low); }
+
+    .cat-tag {
+      color: var(--on-surface-variant);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .proj-desc {
+      color: var(--on-surface-variant);
+      max-width: 360px;
+    }
+
+    .tech-tags {
+      color: var(--on-surface-variant);
+      margin-top: 0.75rem;
+      display: block;
+    }
+
+    .link-editorial {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--primary);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+      transition: opacity var(--transition);
+    }
+    .link-editorial:hover { opacity: 0.65; }
+
+    /* === RIGHT COLUMN (stacked smaller cards) === */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .small-card {
+      background: var(--surface-container-lowest);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .small-card:hover {
+      background: var(--surface-container-low);
+      box-shadow: 0 20px 40px rgba(27,28,26,0.06);
+    }
+
+    .small-img {
+      aspect-ratio: 16/9;
+      overflow: hidden;
+    }
+
+    .small-info {
+      padding: 0.75rem 1rem 1rem;
+    }
+
+    /* === LEGACY EXPERIMENTS === */
+    .legacy-header {
+      margin-bottom: 1.5rem;
+      color: var(--on-surface-variant);
+      text-align: center;
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .legacy-card {
+      background: var(--surface-container-lowest);
+      cursor: pointer;
+      transition: background var(--transition);
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .legacy-card:hover {
+      background: var(--surface-container-low);
+      box-shadow: 0 20px 40px rgba(27,28,26,0.06);
+    }
+
+    .legacy-img {
+      aspect-ratio: 3/2;
+      overflow: hidden;
+    }
+
+    .legacy-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.75rem 1.5rem;
+      gap: 0.65rem;
+    }
+    .legacy-info-tag {
+      font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.10em; text-transform: uppercase; color: var(--on-surface-variant);
+    }
+
+    .legacy-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--on-surface);
+    }
+
+    /* =====================================================
+       CSS MOCK IMAGES — Accurate brand reproductions
+    ===================================================== */
+
+    /* ── LeSpot ─────────────────────────────────────── */
+    .mock-lespot {
+      background: #000;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ls-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+    }
+    .ls-orb-purple { width:55%; height:70%; top:-10%; left:-5%;   background: rgba(110,25,175,0.45); }
+    .ls-orb-gold   { width:50%; height:60%; bottom:-10%; right:0%; background: rgba(255,175,0,0.38);  }
+    .ls-orb-pink   { width:35%; height:40%; bottom:15%; left:20%; background: rgba(239,72,154,0.22);  }
+    .ls-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .ls-ui {
+      position: relative; z-index: 1;
+      width: 78%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.7rem;
+    }
+    .ls-wordmark {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1;
+      background: linear-gradient(90deg, #9b3dcf 0%, #c97ee0 30%, #e8a000 68%, #ffcc00 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .ls-tagline {
+      font-family: 'Inter', sans-serif; font-size: 0.5rem;
+      font-weight: 600; letter-spacing: 0.18em; color: #ffcc00;
+      text-transform: uppercase; margin-top: -0.3rem;
+    }
+    .ls-chips {
+      display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: center;
+    }
+    .ls-chip {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px; padding: 0.2rem 0.55rem;
+      font-family: 'Inter', sans-serif; font-size: 0.47rem;
+      font-weight: 500; color: rgba(255,255,255,0.75);
+    }
+    .ls-chip.active {
+      background: linear-gradient(90deg, rgba(155,61,207,0.65), rgba(239,72,154,0.55));
+      border-color: rgba(239,72,154,0.4); color: #fff;
+    }
+    .ls-cta {
+      background: linear-gradient(90deg, #9b3dcf, #ef489a, #e8a000);
+      border-radius: 999px; padding: 0.38rem 1.1rem;
+      font-family: 'Inter', sans-serif; font-size: 0.52rem;
+      font-weight: 600; color: #fff; letter-spacing: 0.04em;
+    }
+
+    /* ── Student Life Tracker ────────────────────────── */
+    .mock-tracker {
+      background: #000;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tr-orb { position: absolute; border-radius: 50%; filter: blur(68px); pointer-events: none; }
+    .tr-orb-green { width: 60%; height: 80%; top: -15%; left: -8%; background: rgba(74,222,128,0.30); }
+    .tr-orb-emerald { width: 40%; height: 50%; bottom: -5%; right: 0%; background: rgba(16,185,129,0.22); }
+    .tr-orb-amber { width: 30%; height: 38%; bottom: 10%; right: -5%; background: rgba(255,179,0,0.18); }
+    .tr-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .tr-ui {
+      position: relative; z-index: 1;
+      width: 80%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.65rem;
+    }
+    .tr-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: #fff;
+    }
+    .tr-wm-green { color: #4ade80; }
+    .tr-tagline {
+      font-family: 'Inter', sans-serif; font-size: 0.5rem;
+      font-weight: 600; letter-spacing: 0.16em; color: rgba(74,222,128,0.65);
+      text-transform: uppercase; margin-top: -0.35rem;
+    }
+    .tr-score-ring {
+      width: clamp(48px, 8vw, 72px); height: clamp(48px, 8vw, 72px);
+      border-radius: 50%;
+      border: 1.5px solid rgba(74,222,128,0.35);
+      background: rgba(74,222,128,0.07);
+      box-shadow: 0 0 20px rgba(74,222,128,0.12), inset 0 0 12px rgba(74,222,128,0.06);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.05rem;
+    }
+    .tr-score-pct {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.75rem, 1.6vw, 1.1rem);
+      font-weight: 700; color: #4ade80; line-height: 1;
+    }
+    .tr-score-sub { font-size: 0.3rem; color: rgba(255,255,255,0.3); letter-spacing: 0.04em; text-transform: uppercase; }
+    .tr-bars { width: 100%; display: flex; flex-direction: column; gap: 0.32rem; }
+    .tr-bar-row { display: flex; align-items: center; gap: 0.4rem; }
+    .tr-bar-name { font-size: 0.36rem; color: rgba(255,255,255,0.38); min-width: 22%; text-align: right; font-family: 'Inter', sans-serif; }
+    .tr-bar-track { flex: 1; height: 2px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+    .tr-bar-fill { height: 100%; border-radius: 999px; }
+    .tr-fill-g  { background: #4ade80; }
+    .tr-fill-a  { background: #ffb300; }
+    .tr-fill-y  { background: #facc15; }
+    .tr-bar-pct { font-size: 0.36rem; font-weight: 700; min-width: 18%; font-family: 'Inter', sans-serif; }
+
+    /* ── Meetball — sky blue / ochre ── */
+    .mock-meetball {
+      background: #030608;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mb-orb { position: absolute; border-radius: 50%; filter: blur(78px); pointer-events: none; }
+    .mb-orb-teal  { width: 65%; height: 88%; top: -22%; left: -12%; background: rgba(55,130,210,0.48); }
+    .mb-orb-amber { width: 55%; height: 68%; bottom: -22%; right: -10%; background: rgba(195,140,20,0.42); }
+    .mb-orb-coral { width: 32%; height: 42%; top: 5%;  right: 8%;   background: rgba(95,175,230,0.22); }
+    .mb-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .mb-ui {
+      position: relative; z-index: 1;
+      width: 82%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.65rem;
+    }
+    .mb-wordmark {
+      font-family: 'Pirata One', cursive;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      line-height: 1; letter-spacing: 0.03em;
+      background: linear-gradient(100deg, #7dc4e8 0%, #c8a020 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .mb-tagline {
+      font-family: 'Inter', sans-serif; font-size: 0.48rem;
+      font-weight: 600; letter-spacing: 0.18em;
+      color: rgba(205,160,40,0.72); text-transform: uppercase;
+      margin-top: -0.3rem;
+    }
+    .mb-chips { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: center; }
+    .mb-chip {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 999px; padding: 0.2rem 0.55rem;
+      font-family: 'Inter', sans-serif; font-size: 0.44rem;
+      font-weight: 500; color: rgba(255,255,255,0.55);
+    }
+    .mb-chip.lit {
+      background: rgba(55,130,210,0.20); border-color: rgba(100,175,235,0.38);
+      color: rgba(145,210,245,0.92);
+    }
+    .mb-stat {
+      font-family: 'Inter', sans-serif; font-size: 0.44rem;
+      font-weight: 500; letter-spacing: 0.10em;
+      color: rgba(255,255,255,0.22); text-transform: uppercase;
+    }
+
+    /* ── OpenClaw — deep red / AI agents ── */
+    .mock-openclaw {
+      background: #080101;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .oc-orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
+    .oc-orb-teal1 { width: 65%; height: 130%; top: -30%; left: -5%;  background: rgba(180,8,8,0.58); }
+    .oc-orb-teal2 { width: 45%; height: 90%;  bottom: -35%; right: -5%; background: rgba(220,55,15,0.32); }
+    .oc-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.013) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.013) 1px, transparent 1px);
+      background-size: 56px 56px;
+    }
+    .oc-ui {
+      position: relative; z-index: 1;
+      width: 88%; display: flex; flex-direction: column;
+      align-items: center; gap: 0.7rem;
+    }
+    .oc-wordmark-row { display: flex; align-items: center; gap: 0.55rem; }
+    .oc-logo-img {
+      height: clamp(28px, 3.5vw, 44px); width: auto; flex-shrink: 0;
+      filter: drop-shadow(0 0 10px rgba(255,60,40,0.55));
+    }
+    .oc-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.6rem, 3.8vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: #fff;
+    }
+    .oc-wm-accent { color: #ff3c3c; text-shadow: 0 0 30px rgba(255,60,60,0.60); }
+    .oc-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.34rem, 0.65vw, 0.48rem);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,110,80,0.50); margin-top: -0.25rem;
+    }
+    .oc-cases { display: flex; gap: 0.48rem; width: 100%; }
+    .oc-case {
+      flex: 1; display: flex; flex-direction: column; gap: 0.28rem;
+      padding: 0.42rem 0.55rem;
+      border: 1px solid rgba(255,60,40,0.16);
+      border-top: 2px solid rgba(255,60,40,0.72);
+      background: rgba(255,30,10,0.06);
+    }
+    .oc-case-mid { border-top-color: rgba(255,60,40,0.45); background: rgba(255,30,10,0.04); }
+    .oc-case-dim { border-top-color: rgba(255,60,40,0.26); background: rgba(255,30,10,0.02); }
+    .oc-case-num {
+      font-family: 'Inter', sans-serif; font-size: 0.28rem;
+      font-weight: 700; letter-spacing: 0.10em;
+      color: rgba(255,80,60,0.45);
+    }
+    .oc-case-label {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.30rem, 0.58vw, 0.43rem);
+      font-weight: 600; line-height: 1.35;
+      color: rgba(255,255,255,0.82);
+    }
+    .oc-bottom {
+      font-family: 'Inter', sans-serif; font-size: 0.44rem;
+      font-weight: 500; letter-spacing: 0.10em;
+      color: rgba(255,255,255,0.20); text-transform: uppercase;
+    }
+
+    /* ── MiroFish Card Layout ── */
+    .mf-section-header { padding: 2.5rem 0 1rem; text-align: center; color: var(--on-surface-variant); }
+    .mf-row { display: block; }
+    .mf-card { background: var(--surface-container); transition: opacity 200ms var(--ease); display: flex; flex-direction: row; align-items: stretch; }
+    .mf-card:hover { opacity: 0.92; }
+    .mf-img { aspect-ratio: 16/7; width: 60%; flex-shrink: 0; overflow: hidden; }
+    .mf-card-info { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 0.55rem; padding: 1.75rem 1.5rem; }
+    /* Right-column context block */
+    .mf-context { display: flex; flex-direction: column; gap: 1.25rem; padding-top: 0.25rem; }
+    .mf-context-eyebrow { color: var(--on-surface-variant); margin-bottom: -0.5rem; }
+    .mf-context-heading { font-family: 'Newsreader', serif; font-size: clamp(1.3rem, 2.4vw, 1.75rem); font-weight: 400; line-height: 1.25; color: var(--on-surface); font-style: italic; }
+    .mf-context-body { font-family: 'Inter', sans-serif; font-size: 0.9rem; line-height: 1.7; color: var(--on-surface-variant); }
+    .mf-context-body strong { color: var(--on-surface); font-weight: 600; }
+    .mf-context-divider { width: 2rem; height: 1px; background: var(--primary); opacity: 0.4; }
+    .mf-context-stat { display: flex; flex-direction: column; gap: 0.15rem; }
+    .mf-context-stat-num { font-family: 'Newsreader', serif; font-size: 2.2rem; font-weight: 700; color: #4da8ff; line-height: 1; }
+    .mf-context-stat-lbl { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; color: var(--on-surface-variant); }
+    .mf-context-stats { display: flex; gap: 2rem; }
+    @media (max-width: 768px) {
+      .mf-row { grid-template-columns: 1fr; }
+      .mf-card { flex-direction: column; }
+      .mf-img { width: 100%; aspect-ratio: 16/7; }
+      .legacy-card { flex-direction: column; }
+      .legacy-img-wide { width: 100%; aspect-ratio: 16/7; }
+    }
+
+    /* ── MiroFish Mock Image — deep ocean / swarm ── */
+    .mock-mirofish {
+      background: #010610;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mf-orb { position: absolute; border-radius: 50%; filter: blur(88px); pointer-events: none; }
+    .mf-orb-blue { width: 70%; height: 120%; top: -30%; left: -10%; background: rgba(18,60,210,0.50); }
+    .mf-orb-cyan { width: 48%; height: 80%; bottom: -30%; right: -5%;  background: rgba(0,200,220,0.32); }
+    .mf-orb-mid  { width: 30%; height: 45%; top: 10%;  right: 15%;    background: rgba(60,100,255,0.18); }
+    .mf-grid-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,150,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,255,0.015) 1px, transparent 1px);
+      background-size: 52px 52px;
+    }
+    .mf-ui {
+      position: relative; z-index: 1; width: 92%;
+      display: flex; flex-direction: column; align-items: center; gap: 0.65rem;
+      text-align: center;
+    }
+    /* Logo header row inside mock */
+    .mf-logo-header { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; }
+    .mf-logo-img {
+      height: clamp(42px, 6.5vw, 78px); width: auto; flex-shrink: 0;
+      filter: drop-shadow(0 0 14px rgba(0,180,255,0.7));
+    }
+    .mf-logo-tagline {
+      font-family: 'Inter', sans-serif; font-size: clamp(0.26rem, 0.48vw, 0.38rem);
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(0,190,220,0.55);
+    }
+    /* Editorial content inside MiroFish mock */
+    .mf-editorial { display: flex; flex-direction: column; align-items: center; gap: 0.42rem; width: 100%; }
+    .mf-edit-eye {
+      font-family: 'Inter', sans-serif; font-size: clamp(0.26rem, 0.46vw, 0.35rem);
+      font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(0,200,230,0.55);
+    }
+    .mf-edit-headline {
+      font-family: 'Newsreader', serif; font-style: italic;
+      font-size: clamp(0.72rem, 1.35vw, 1.10rem); font-weight: 400;
+      color: #ffffff; line-height: 1.25;
+    }
+    .mf-edit-div { width: 1.5rem; height: 1px; background: rgba(77,168,255,0.45); margin: 0.1rem auto; }
+    .mf-edit-body {
+      font-family: 'Inter', sans-serif; font-size: clamp(0.24rem, 0.45vw, 0.35rem);
+      line-height: 1.6; color: rgba(255,255,255,0.50);
+    }
+    .mf-edit-stats { display: flex; justify-content: center; gap: clamp(0.8rem, 2vw, 2rem); margin-top: 0.25rem; }
+    .mf-edit-stat-n {
+      font-family: 'Newsreader', serif; font-size: clamp(0.80rem, 1.5vw, 1.20rem);
+      font-weight: 700; color: #4da8ff; display: block; line-height: 1;
+    }
+    .mf-edit-stat-l {
+      font-family: 'Inter', sans-serif; font-size: clamp(0.20rem, 0.38vw, 0.29rem);
+      color: rgba(255,255,255,0.38); letter-spacing: 0.06em; display: block; margin-top: 0.1rem;
+    }
+    .mf-tagline {
+      font-family: 'Inter', sans-serif; font-size: clamp(0.32rem, 0.60vw, 0.44rem);
+      font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(0,200,230,0.52); margin-top: -0.2rem;
+    }
+    /* Agent swarm dots */
+    .mf-swarm { position: relative; width: 90%; height: clamp(28px, 3.5vw, 40px); }
+    .mf-dot {
+      position: absolute; width: 3px; height: 3px; border-radius: 50%;
+      background: #00d4ff; box-shadow: 0 0 6px rgba(0,212,255,0.85), 0 0 14px rgba(0,212,255,0.35);
+    }
+    .mf-dot.dim { background: rgba(0,212,255,0.38); box-shadow: 0 0 4px rgba(0,212,255,0.32); }
+    .mf-dot.lead { background: #fff; width: 5px; height: 5px; box-shadow: 0 0 8px rgba(0,212,255,1), 0 0 22px rgba(0,212,255,0.55); }
+    .mf-d1{left:8%;top:58%} .mf-d2{left:16%;top:25%} .mf-d3{left:23%;top:70%}
+    .mf-d4{left:30%;top:40%} .mf-d5{left:38%;top:65%} .mf-d6{left:45%;top:20%}
+    .mf-d7{left:52%;top:50%} .mf-d8{left:58%;top:75%} .mf-d9{left:65%;top:32%}
+    .mf-d10{left:72%;top:62%} .mf-d11{left:79%;top:22%} .mf-d12{left:85%;top:55%} .mf-d13{left:92%;top:38%}
+    /* Use-case chips */
+    .mf-uses { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center; }
+    .mf-use {
+      display: flex; align-items: center; gap: 0.3rem;
+      padding: 0.22rem 0.55rem;
+      border: 1px solid rgba(77,168,255,0.28); background: rgba(20,80,200,0.14);
+      font-family: 'Inter', sans-serif; font-size: clamp(0.30rem, 0.55vw, 0.42rem);
+      font-weight: 600; letter-spacing: 0.06em; color: rgba(180,225,255,0.88);
+    }
+    .mf-use-icon { font-size: clamp(0.40rem, 0.75vw, 0.55rem); }
+
+    /* ── MiroFish Panel — Custom Content Styles ── */
+    .mf-panel-stats {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      border: 1px solid var(--surface-container-high); margin: 0.5rem 0 1.75rem;
+    }
+    .mf-ps {
+      display: flex; flex-direction: column; align-items: center; gap: 0.22rem;
+      padding: 0.9rem 0.4rem; border-right: 1px solid var(--surface-container-high);
+    }
+    .mf-ps:last-child { border-right: none; }
+    .mf-ps-num { font-family: 'Newsreader', serif; font-size: 1.9rem; font-weight: 700; color: #4da8ff; line-height: 1; }
+    .mf-ps-lbl { font-family: 'Inter', sans-serif; font-size: 0.64rem; font-weight: 500; letter-spacing: 0.04em; color: var(--on-surface-variant); text-align: center; }
+    .mf-section-lbl { font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #4da8ff; margin: 1.5rem 0 0.75rem; display: block; }
+    .mf-stages { display: flex; flex-direction: column; }
+    .mf-stage { display: flex; align-items: flex-start; gap: 1rem; padding: 0.65rem 0; border-bottom: 1px solid var(--surface-container-high); }
+    .mf-stage:last-child { border-bottom: none; }
+    .mf-stage-n { font-family: 'Inter', sans-serif; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.06em; color: rgba(77,168,255,0.38); flex-shrink: 0; min-width: 1.8rem; padding-top: 0.08rem; }
+    .mf-stage-body { display: flex; flex-direction: column; gap: 0.18rem; }
+    .mf-stage-name { font-family: 'Inter', sans-serif; font-size: 0.84rem; font-weight: 600; color: var(--on-surface); }
+    .mf-stage-desc { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: var(--on-surface-variant); line-height: 1.45; }
+    .mf-runs-panel { display: flex; flex-direction: column; gap: 0.5rem; }
+    .mf-run-card { display: grid; grid-template-columns: 3rem 7rem 1fr; gap: 0.75rem; align-items: center; padding: 0.65rem 0.9rem; background: var(--surface-container); border-left: 3px solid rgba(77,168,255,0.65); }
+    .mf-run-label { font-family: 'Inter', sans-serif; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(77,168,255,0.52); }
+    .mf-run-country { font-family: 'Newsreader', serif; font-size: 1.05rem; font-weight: 700; color: var(--on-surface); }
+    .mf-run-detail { font-family: 'Inter', sans-serif; font-size: 0.76rem; color: var(--on-surface-variant); line-height: 1.35; }
+    .mf-insight-box { margin: 0.7rem 0 0; padding: 0.7rem 1rem; background: rgba(77,168,255,0.06); border: 1px solid rgba(77,168,255,0.15); font-family: 'Inter', sans-serif; font-size: 0.78rem; line-height: 1.55; color: var(--on-surface-variant); font-style: italic; }
+    .mf-next-box { margin-top: 1.5rem; padding: 1rem 1.1rem; background: rgba(77,168,255,0.04); border: 1px solid rgba(77,168,255,0.14); display: flex; flex-direction: column; gap: 0.38rem; }
+    .mf-next-badge { font-family: 'Inter', sans-serif; font-size: 0.60rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(77,168,255,0.52); }
+    .mf-next-title { font-family: 'Newsreader', serif; font-size: 1.05rem; font-weight: 700; color: var(--on-surface); }
+    .mf-next-desc { font-family: 'Inter', sans-serif; font-size: 0.78rem; line-height: 1.5; color: var(--on-surface-variant); }
+
+    /* === Row 2 single card === */
+    .row2-single {
+      display: block;
+    }
+    .legacy-img-wide { aspect-ratio: 16/7; width: 60%; flex-shrink: 0; overflow: hidden; }
+
+    /* =====================================================
+       PROJECT DETAIL PANEL (slide-in from right)
+    ===================================================== */
+    .proj-panel-overlay {
+      position: fixed; inset: 0; z-index: 400;
+      background: rgba(27,28,26,0.45);
+      opacity: 0; pointer-events: none;
+      transition: opacity 300ms var(--ease);
+      backdrop-filter: blur(4px);
+    }
+    .proj-panel-overlay.open { opacity: 1; pointer-events: all; }
+
+    .proj-panel {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: min(620px, 100vw);
+      background: var(--surface);
+      z-index: 401;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 360ms var(--ease);
+      display: flex; flex-direction: column;
+    }
+    .proj-panel-overlay.open .proj-panel { transform: translateX(0); }
+
+    .panel-nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 1.75rem;
+      background: rgba(250,249,245,0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(196,200,186,0.18);
+    }
+    .panel-close {
+      background: none; border: none; cursor: pointer;
+      font-size: 1.5rem; line-height: 1;
+      color: var(--on-surface-variant);
+      padding: 0.25rem 0.5rem;
+      transition: color var(--transition);
+    }
+    .panel-close:hover { color: var(--on-surface); }
+
+    .panel-body { padding: 2rem 1.75rem 3rem; flex: 1; }
+
+    .panel-category { color: var(--on-surface-variant); margin-bottom: 0.75rem; display: block; }
+    .panel-title { color: var(--on-surface); margin-bottom: 1.5rem; }
+
+    .panel-mock {
+      width: 100%; aspect-ratio: 16/9;
+      overflow: hidden; margin-bottom: 2rem;
+      background: var(--surface-container-highest);
+      position: relative;
+    }
+
+    .panel-section-label {
+      color: var(--on-surface-variant);
+      margin-bottom: 0.75rem; display: block;
+      margin-top: 1.75rem;
+    }
+    .panel-text { color: var(--on-surface-variant); line-height: 1.7; }
+    .panel-text + .panel-text { margin-top: 0.75rem; }
+
+    .panel-outcomes { list-style: none; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .panel-outcome {
+      display: flex; gap: 0.75rem; align-items: flex-start;
+      color: var(--on-surface-variant);
+      font-family: 'Inter', sans-serif; font-size: 0.9375rem; line-height: 1.55;
+    }
+    .panel-outcome::before { content: '→'; color: var(--primary); flex-shrink: 0; font-size: 0.85rem; margin-top: 0.1rem; }
+
+    .panel-tech { margin-top: 0.6rem; color: var(--on-surface-variant); }
+
+    .panel-link {
+      display: inline-block; margin-top: 2rem;
+      font-family: 'Newsreader', serif; font-style: italic; font-size: 1.05rem;
+      color: var(--primary);
+      text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px;
+      transition: opacity var(--transition);
+    }
+    .panel-link:hover { opacity: 0.65; }
+
+    .panel-divider {
+      border: none; border-top: 1px solid rgba(196,200,186,0.25); margin: 1.75rem 0 0;
+    }
+
+    /* =====================================================
+       QUOTE / MANIFESTO
+    ===================================================== */
+    .manifesto {
+      background: var(--surface-container-low);
+      padding: clamp(5rem, 10vw, 10rem) clamp(1.25rem, 5vw, 3rem);
+      text-align: center;
+    }
+
+    .manifesto blockquote { max-width: 900px; margin: 0 auto; }
+
+    .manifesto-text {
+      color: var(--on-surface);
+      font-style: italic;
+    }
+
+    .manifesto-cite {
+      display: block;
+      font-style: normal;
+      color: var(--on-surface-variant);
+      margin-top: 2rem;
+    }
+
+    /* =====================================================
+       ABOUT
+    ===================================================== */
+    .about {
+      background: var(--surface);
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.25rem, 5vw, 3rem);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 35% 1fr;
+      gap: clamp(2rem, 6vw, 5rem);
+      align-items: start;
+    }
+
+    .story-label {
+      color: var(--on-surface-variant);
+      margin-bottom: 2rem;
+      display: block;
+    }
+
+    .story-body p {
+      color: var(--on-surface-variant);
+      line-height: 1.7;
+    }
+    .story-body p + p { margin-top: 1.25rem; }
+
+    /* Founders */
+    .founders {
+      display: flex;
+      flex-direction: column;
+      gap: 3.5rem;
+    }
+
+    .founder {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    .founder-photo {
+      width: 120px;
+      height: 150px;
+      background: var(--surface-container-high);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .founder-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+    }
+
+    .founder-name {
+      color: var(--on-surface);
+      margin-bottom: 0.4rem;
+    }
+
+    .founder-role {
+      color: var(--on-surface-variant);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .founder-links {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .founder-link {
+      color: var(--primary);
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+      transition: opacity var(--transition);
+    }
+    .founder-link:hover { opacity: 0.65; }
+
+    /* =====================================================
+       TECH MARQUEE
+    ===================================================== */
+    .marquee-section {
+      background: var(--surface-container);
+      padding: 2.5rem 0;
+      overflow: hidden;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 35s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+
+    .marquee-item {
+      color: var(--on-surface-variant);
+      padding: 0 1.5rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+    .footer {
+      background: var(--on-surface);
+      padding: clamp(4rem, 8vw, 6rem) clamp(1.25rem, 5vw, 3rem) clamp(2rem, 4vw, 2.5rem);
+    }
+
+    .footer-cta {
+      display: inline-block;
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      color: var(--surface);
+      text-decoration: none;
+      margin-bottom: clamp(3rem, 6vw, 5rem);
+      transition: opacity var(--transition);
+    }
+    .footer-cta:hover { opacity: 0.75; }
+
+    .footer-cta .arrow {
+      display: inline-block;
+      transition: transform var(--transition);
+    }
+    .footer-cta:hover .arrow { transform: translateX(6px); }
+
+    .footer-rule {
+      border: none;
+      border-top: 1px solid rgba(196, 200, 186, 0.15);
+      margin-bottom: 1.75rem;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .footer-wordmark {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.6875rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--surface);
+      margin-bottom: 0.625rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-link {
+      color: rgba(250,249,245,0.55);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    .footer-link:hover { color: var(--surface); }
+
+    .footer-copy {
+      color: rgba(250,249,245,0.35);
+      text-align: right;
+    }
+
+    /* =====================================================
+       SECTION REVEAL
+    ===================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 600ms ease, transform 600ms ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .row1 { grid-template-columns: 1fr; }
+      .row2 { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .founder { grid-template-columns: 1fr; gap: 1rem; }
+      .founder-photo { width: 100px; height: 125px; }
+
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .footer-copy { text-align: left; }
+    }
+
+    /* =====================================================
+       REDUCED MOTION
+    ===================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+      }
+      .marquee-track { animation: none; }
+      .scroll-cue { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================
+       MOBILE NAV OVERLAY
+  ===================================================== -->
+  <div class="mobile-overlay" id="mobile-overlay" aria-hidden="true" role="dialog" aria-label="Navigation">
+    <button class="mobile-close" id="mobile-close" aria-label="Close menu">&#215;</button>
+    <a class="mobile-overlay-link" href="#projects" onclick="closeNav()">Projects</a>
+    <a class="mobile-overlay-link" href="#about" onclick="closeNav()">About</a>
+    <a class="mobile-overlay-link" href="#contact" onclick="closeNav()">Contact</a>
+  </div>
+
+  <!-- =====================================================
+       NAVIGATION
+  ===================================================== -->
+  <nav class="nav" id="site-nav" role="navigation" aria-label="Main">
+    <a class="nav-wordmark" href="#"><img src="SCALIA_logo.png" alt="Scalia" /></a>
+
+    <div class="nav-links">
+      <a class="nav-link is-active" href="#projects">Projects</a>
+      <a class="nav-link" href="#about">About</a>
+      <a class="nav-link nav-contact label-sm" href="#contact">Contact</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <main>
+    <!-- =================================================
+         HERO
+    ================================================= -->
+    <section class="hero page-pad" aria-label="Hero">
+
+      <!-- Sneak peek of projects floating in upper hero space -->
+
+      <div>
+        <p class="label-sm hero-meta">Paris, Geneva, Vienna</p>
+
+        <h1 class="display-lg hero-h1">
+          Built by students.<br>
+          <span class="hero-italic">Powered by AI.<span class="cursor">|</span></span>
+        </h1>
+
+        <p class="body-lg hero-sub">
+          We spotted problems. We built the fix. Independent studio crafting digital permanence through high-speed iteration.
+        </p>
+      </div>
+
+      <!-- Scroll cue -->
+      <div class="scroll-cue" id="scroll-cue" aria-hidden="true">
+        <svg width="18" height="26" viewBox="0 0 18 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="9" y1="1" x2="9" y2="22" stroke="#44483f" stroke-width="1"/>
+          <polyline points="3,16 9,22 15,16" stroke="#44483f" stroke-width="1" fill="none"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- =================================================
+         OUR TOOLKIT
+    ================================================= -->
+    <section class="toolkit" aria-label="Our Toolkit">
+      <div class="toolkit-header reveal">
+        <span class="label-sm">Our Toolkit</span>
+      </div>
+      <div class="toolkit-track-wrap">
+        <div class="toolkit-track">
+          <!-- Set 1 — mixed order -->
+          <div class="tool-card">
+            <img src="Python-logo-notext.svg.png" alt="Python" class="tool-logo"/>
+            <span class="tool-name">Python</span>
+            <span class="tool-cat">Programming</span>
+          </div>
+          <div class="tool-card">
+            <img src="original-claude_logo-large-1761059695607.webp" alt="Claude" class="tool-logo"/>
+            <span class="tool-name">Claude</span>
+            <span class="tool-cat">AI Assistant</span>
+          </div>
+          <div class="tool-card">
+            <img src="HTML5_logo_and_wordmark.svg.png" alt="HTML" class="tool-logo"/>
+            <span class="tool-name">HTML</span>
+            <span class="tool-cat">Markup</span>
+          </div>
+          <div class="tool-card">
+            <img src="make-color.png" alt="Make.com" class="tool-logo"/>
+            <span class="tool-name">Make.com</span>
+            <span class="tool-cat">Automation</span>
+          </div>
+          <div class="tool-card">
+            <img src="docker-icon.BfVtTavh.png" alt="Docker" class="tool-logo"/>
+            <span class="tool-name">Docker</span>
+            <span class="tool-cat">Containers</span>
+          </div>
+          <div class="tool-card">
+            <img src="CSS3_logo_and_wordmark.svg.png" alt="CSS" class="tool-logo"/>
+            <span class="tool-name">CSS</span>
+            <span class="tool-cat">Styling</span>
+          </div>
+          <div class="tool-card">
+            <img src="mirofish_logo.png" alt="MiroFish" class="tool-logo"/>
+            <span class="tool-name">MiroFish</span>
+            <span class="tool-cat">Swarm Intelligence</span>
+          </div>
+          <div class="tool-card">
+            <img src="C++-Logo.wine.png" alt="C++" class="tool-logo"/>
+            <span class="tool-name">C++</span>
+            <span class="tool-cat">Programming</span>
+          </div>
+          <div class="tool-card">
+            <img src="N8n-logo-new.svg.png" alt="n8n" class="tool-logo"/>
+            <span class="tool-name">n8n</span>
+            <span class="tool-cat">Automation</span>
+          </div>
+          <div class="tool-card">
+            <img src="lovable-color.png" alt="Lovable" class="tool-logo"/>
+            <span class="tool-name">Lovable</span>
+            <span class="tool-cat">AI App Builder</span>
+          </div>
+          <div class="tool-card">
+            <img src="Git_Bash_Logo.png" alt="Git Bash" class="tool-logo"/>
+            <span class="tool-name">Git Bash</span>
+            <span class="tool-cat">Version Control</span>
+          </div>
+          <div class="tool-card">
+            <img src="openclaw.png" alt="OpenClaw" class="tool-logo"/>
+            <span class="tool-name">OpenClaw</span>
+            <span class="tool-cat">Agent Framework</span>
+          </div>
+          <!-- Set 2 — same mixed order for seamless loop -->
+          <div class="tool-card" aria-hidden="true">
+            <img src="Python-logo-notext.svg.png" alt="" class="tool-logo"/>
+            <span class="tool-name">Python</span>
+            <span class="tool-cat">Programming</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="original-claude_logo-large-1761059695607.webp" alt="" class="tool-logo"/>
+            <span class="tool-name">Claude</span>
+            <span class="tool-cat">AI Assistant</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="HTML5_logo_and_wordmark.svg.png" alt="" class="tool-logo"/>
+            <span class="tool-name">HTML</span>
+            <span class="tool-cat">Markup</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="make-color.png" alt="" class="tool-logo"/>
+            <span class="tool-name">Make.com</span>
+            <span class="tool-cat">Automation</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="docker-icon.BfVtTavh.png" alt="" class="tool-logo"/>
+            <span class="tool-name">Docker</span>
+            <span class="tool-cat">Containers</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="CSS3_logo_and_wordmark.svg.png" alt="" class="tool-logo"/>
+            <span class="tool-name">CSS</span>
+            <span class="tool-cat">Styling</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="mirofish_logo.png" alt="" class="tool-logo"/>
+            <span class="tool-name">MiroFish</span>
+            <span class="tool-cat">Swarm Intelligence</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="C++-Logo.wine.png" alt="" class="tool-logo"/>
+            <span class="tool-name">C++</span>
+            <span class="tool-cat">Programming</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="N8n-logo-new.svg.png" alt="" class="tool-logo"/>
+            <span class="tool-name">n8n</span>
+            <span class="tool-cat">Automation</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="lovable-color.png" alt="" class="tool-logo"/>
+            <span class="tool-name">Lovable</span>
+            <span class="tool-cat">AI App Builder</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="Git_Bash_Logo.png" alt="" class="tool-logo"/>
+            <span class="tool-name">Git Bash</span>
+            <span class="tool-cat">Version Control</span>
+          </div>
+          <div class="tool-card" aria-hidden="true">
+            <img src="openclaw.png" alt="" class="tool-logo"/>
+            <span class="tool-name">OpenClaw</span>
+            <span class="tool-cat">Agent Framework</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         SELECTED WORKS
+    ================================================= -->
+    <section class="projects page-pad" id="projects" aria-label="Selected Works">
+
+      <div class="section-header reveal">
+        <span class="label-sm">Selected Works</span>
+      </div>
+
+      <!-- ROW 1: 58 / 40 asymmetric grid -->
+      <div class="row1">
+
+        <!-- FEATURED: LeSpot -->
+        <article class="featured-card reveal" aria-label="LeSpot project" style="cursor:pointer;" onclick="openProject('lespot')">
+          <div class="featured-img mock-lespot">
+            <div class="ls-orb ls-orb-purple"></div>
+            <div class="ls-orb ls-orb-gold"></div>
+            <div class="ls-orb ls-orb-pink"></div>
+            <div class="ls-grid-overlay"></div>
+            <div class="ls-ui">
+              <div class="ls-wordmark">LeSpot.</div>
+              <div class="ls-tagline">Cultural Discovery · Made Easy</div>
+              <div class="ls-chips">
+                <span class="ls-chip">🎭 Culture</span>
+                <span class="ls-chip active">🌙 Tonight</span>
+                <span class="ls-chip">🎵 Music</span>
+                <span class="ls-chip">🎨 Art</span>
+                <span class="ls-chip">🍷 Food</span>
+                <span class="ls-chip">🏛️ History</span>
+              </div>
+              <div class="ls-cta">Discover Free Events →</div>
+            </div>
+            <span class="label-sm featured-badge">FEATURED</span>
+          </div>
+
+          <!-- Project Reveal: name overlaps image bottom -->
+          <div class="project-reveal-name">
+            <h2 class="display-md" style="color: var(--on-surface); padding-top: 0.75rem;">LeSpot</h2>
+          </div>
+
+          <div class="featured-info">
+            <span class="label-sm cat-tag">AI APP &middot; FULL-STACK</span>
+            <p class="body-lg proj-desc">Free cultural event discovery for international students in Paris. 1,500+ curated events across all 20 arrondissements — surfaced by an AI layer that matches your mood, schedule, and interests in seconds. The frontend is a React + TypeScript app deployed on Vercel; the backend runs on Supabase (PostgreSQL with row-level security and real-time sync); Gemini AI handles semantic mood-to-event matching. Built in collaboration with Open Data University and Ministère de la Culture. Live beta.</p>
+            <span class="label-sm tech-tags">React &middot; TypeScript &middot; Supabase &middot; PostgreSQL &middot; Gemini AI &middot; Vercel</span>
+            <a class="link-editorial" href="https://web-lespot.vercel.app/" target="_blank" rel="noopener noreferrer">View project &rarr;</a>
+          </div>
+        </article>
+
+        <!-- RIGHT COLUMN: two stacked smaller cards -->
+        <div class="right-col">
+
+          <!-- Student Life Tracker -->
+          <article class="small-card reveal" aria-label="Student Productivity Tracker project" style="cursor:pointer;" onclick="openProject('tracker')">
+            <div class="small-img mock-tracker">
+              <div class="tr-orb tr-orb-green"></div>
+              <div class="tr-orb tr-orb-emerald"></div>
+              <div class="tr-orb tr-orb-amber"></div>
+              <div class="tr-grid-overlay"></div>
+              <div class="tr-ui">
+                <div class="tr-wordmark"><span class="tr-wm-green">Track</span>.er</div>
+                <div class="tr-tagline">Reliability · Streaks · Wellness</div>
+                <div class="tr-score-ring">
+                  <span class="tr-score-pct">82%</span>
+                  <span class="tr-score-sub">Reliability</span>
+                </div>
+                <div class="tr-bars">
+                  <div class="tr-bar-row">
+                    <span class="tr-bar-name">Completion</span>
+                    <div class="tr-bar-track"><div class="tr-bar-fill tr-fill-g" style="width:82%"></div></div>
+                    <span class="tr-bar-pct" style="color:#4ade80">82%</span>
+                  </div>
+                  <div class="tr-bar-row">
+                    <span class="tr-bar-name">Focus</span>
+                    <div class="tr-bar-track"><div class="tr-bar-fill tr-fill-a" style="width:70%"></div></div>
+                    <span class="tr-bar-pct" style="color:#ffb300">70%</span>
+                  </div>
+                  <div class="tr-bar-row">
+                    <span class="tr-bar-name">Precision</span>
+                    <div class="tr-bar-track"><div class="tr-bar-fill tr-fill-y" style="width:65%"></div></div>
+                    <span class="tr-bar-pct" style="color:#facc15">65%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="small-info">
+              <span class="label-sm cat-tag">PRODUCTIVITY &middot; FULL-STACK</span>
+              <h3 class="headline-lg" style="color: var(--on-surface);">Student Life Tracker</h3>
+              <p class="body-lg proj-desc" style="margin-top:0.4rem;">Task management, academic scheduling, wellness tracking, and gamified streaks — backed by a 9-table Supabase schema with row-level security and a custom reliability scoring engine.</p>
+              <span class="label-sm tech-tags" style="margin-top:0.5rem;">React &middot; TypeScript &middot; Supabase &middot; Recharts &middot; Vite</span>
+            </div>
+          </article>
+
+          <!-- Meetball -->
+          <article class="small-card reveal" aria-label="Meetball Automation project" style="cursor:pointer;" onclick="openProject('meetball')">
+            <div class="small-img mock-meetball">
+              <div class="mb-orb mb-orb-teal"></div>
+              <div class="mb-orb mb-orb-amber"></div>
+              <div class="mb-orb mb-orb-coral"></div>
+              <div class="mb-grid-overlay"></div>
+              <div class="mb-ui">
+                <div class="mb-wordmark">meetball</div>
+                <div class="mb-tagline">Match · Connect · Meet</div>
+                <div class="mb-chips">
+                  <span class="mb-chip lit">Portugal Tech Week</span>
+                  <span class="mb-chip">Email Automation</span>
+                  <span class="mb-chip">Live Matching</span>
+                </div>
+                <div class="mb-stat">847 emails · Make.com · Resend</div>
+              </div>
+            </div>
+            <div class="small-info">
+              <span class="label-sm cat-tag">AUTOMATION &middot; EMAIL ENGINEERING</span>
+              <h3 class="headline-lg" style="color: var(--on-surface);">Meetball</h3>
+              <p class="body-lg proj-desc" style="margin-top:0.4rem;">One of our founders has designed and shipped the full email system for a Lisbon community startup — 2 HTML email templates, 2 Make.com pipelines (Webhooks → Router → Resend ×3 + Data store ×3), and an event organiser outreach campaign with QR code assets. Live for Portugal Tech Week.</p>
+              <span class="label-sm tech-tags" style="margin-top:0.5rem;">Make.com &middot; Resend &middot; HTML Email &middot; Webhooks &middot; Data Store</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- MiroFish — Personal Research -->
+      <div class="mf-section-header reveal">
+        <span class="label-sm">Personal Research</span>
+      </div>
+
+      <div class="mf-row">
+
+        <!-- Card -->
+        <article class="mf-card reveal" aria-label="MiroFish Swarm Intelligence project" style="cursor:pointer;" onclick="openProject('mirofish')">
+          <div class="mf-img mock-mirofish">
+            <div class="mf-orb mf-orb-blue"></div>
+            <div class="mf-orb mf-orb-cyan"></div>
+            <div class="mf-orb mf-orb-mid"></div>
+            <div class="mf-grid-overlay"></div>
+            <div class="mf-ui">
+              <div class="mf-logo-header">
+                <img src="mirofish_logo.png" class="mf-logo-img" alt="MiroFish"/>
+                <span class="mf-logo-tagline">Swarm Intelligence · Prediction Engine</span>
+              </div>
+              <div class="mf-editorial">
+                <span class="mf-edit-eye">What is Swarm Intelligence?</span>
+                <p class="mf-edit-headline">Instead of training a model on data, you simulate a society.</p>
+                <div class="mf-edit-div"></div>
+                <p class="mf-edit-body">MiroFish builds a living digital world populated by AI agents — each with unique personality, memory, and biases. They post, debate, form factions, shift opinions. The prediction emerges from collective behaviour. Applicable to elections, sports, markets, and policy.</p>
+              </div>
+              <div class="mf-edit-stats">
+                <div><span class="mf-edit-stat-n">120</span><span class="mf-edit-stat-l">Agents per simulation</span></div>
+                <div><span class="mf-edit-stat-n">30+</span><span class="mf-edit-stat-l">Simulation rounds</span></div>
+                <div><span class="mf-edit-stat-n">#1</span><span class="mf-edit-stat-l">GitHub Global Trending</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="mf-card-info">
+            <span class="label-sm cat-tag">AI AGENTS · SIMULATION · FORECASTING</span>
+            <h3 class="headline-lg" style="color: var(--on-surface);">MiroFish — Swarm Intelligence Engine</h3>
+            <p class="body-lg proj-desc">Deploy 120 AI agents into a digital world. Let them debate, form factions, shift opinions. Extract the prediction from their collective behaviour.</p>
+            <span class="label-sm tech-tags">Python · Neo4j AuraDB · OpenRouter · NVIDIA Nemotron 120B · OASIS</span>
+            <p class="body-lg proj-desc" style="margin-top:0.35rem;">Our members have set up and run research on different use cases for predictive agentic AI through MiroFish — these include electoral prediction and sporting events.</p>
+            <a href="hungary-2026.html" target="_blank" class="link-editorial" style="margin-top:0.5rem;display:inline-block;">Latest research: Hungary 2026 election simulation →</a>
+          </div>
+        </article>
+
+
+      </div>
+
+      <!-- ROW 2: Legacy Experiments -->
+      <div class="legacy-header reveal">
+        <span class="label-sm">Legacy Experiments</span>
+      </div>
+
+      <div class="row2-single">
+
+        <!-- OpenClaw Agents — full-width -->
+        <article class="legacy-card reveal" aria-label="OpenClaw Agents project" style="cursor:pointer;" onclick="openProject('openclaw')">
+          <div class="legacy-img-wide mock-openclaw">
+            <div class="oc-orb oc-orb-teal1"></div>
+            <div class="oc-orb oc-orb-teal2"></div>
+            <div class="oc-grid-overlay"></div>
+            <div class="oc-ui">
+              <div class="oc-wordmark-row">
+                <img src="openclaw.png" class="oc-logo-img" alt="OpenClaw logo"/>
+                <div class="oc-wordmark">Open<span class="oc-wm-accent">Claw</span></div>
+              </div>
+              <div class="oc-subtitle">Use Cases for Personal AI Agent Teams</div>
+              <div class="oc-cases">
+                <div class="oc-case">
+                  <span class="oc-case-num">01</span>
+                  <span class="oc-case-label">Multi-agentic office infrastructure</span>
+                </div>
+                <div class="oc-case oc-case-mid">
+                  <span class="oc-case-num">02</span>
+                  <span class="oc-case-label">Fully integrated outreach team</span>
+                </div>
+                <div class="oc-case oc-case-dim">
+                  <span class="oc-case-num">03</span>
+                  <span class="oc-case-label">Idea testing and research frameworks</span>
+                </div>
+              </div>
+              <div class="oc-bottom">Python · AWS · REST API · Claude</div>
+            </div>
+          </div>
+          <div class="legacy-info">
+            <span class="label-sm" style="color:var(--on-surface-variant);">AI AGENTS &middot; INFRA</span>
+            <span class="legacy-name">OpenClaw Agents</span>
+            <p class="body-lg" style="color:var(--on-surface-variant);font-size:0.85rem;line-height:1.6;">OpenClaw is a personal AI agent framework for coordinating teams of specialised LLM agents around a shared goal. Each agent holds a distinct role and communicates through a structured REST API layer, enabling autonomous delegation and multi-step task execution without human intervention. The stack runs on Python and AWS Lambda, orchestrated via Anthropic's Claude API for reasoning and inter-agent messaging.</p>
+            <span class="label-sm" style="color:var(--on-surface-variant);">Python &middot; AWS Lambda &middot; REST API &middot; Claude API</span>
+            <p class="body-lg" style="color:var(--on-surface-variant);font-size:0.82rem;line-height:1.55;margin-top:0.2rem;">Applied to: multi-agentic office infrastructure &middot; fully integrated outreach teams &middot; idea testing &amp; research frameworks.</p>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <!-- =================================================
+         MANIFESTO QUOTE
+    ================================================= -->
+    <section class="manifesto reveal" aria-label="Manifesto">
+      <blockquote>
+        <p class="display-md manifesto-text">&ldquo;We don&rsquo;t wait for permission<br>to build things.&rdquo;</p>
+        <cite class="label-sm manifesto-cite">&mdash; THE SCALEFORM MANIFESTO</cite>
+      </blockquote>
+    </section>
+
+    <!-- =================================================
+         ABOUT
+    ================================================= -->
+    <section class="about" id="about" aria-label="About Scaleform">
+      <div class="about-grid">
+
+        <!-- Left: Studio story -->
+        <div>
+          <span class="label-sm story-label">Our Story</span>
+          <div class="story-body body-lg">
+            <p>Two Forward College &amp; LSE students, united by a frustration with the gap between what AI can do and what most organisations are actually shipping.</p>
+            <p>Scaleform is our answer: a working studio where we build real products and design AI integration strategies — using LLMs not just as tools but as co-architects. From idea to live product in days, not months.</p>
+            <p>Every project on this site is shipped, live, and built by us. No mock-ups. No hypotheticals.</p>
+          </div>
+        </div>
+
+        <!-- Right: Founders -->
+        <div class="founders">
+
+          <!-- Founder 1 — Matteo Mio -->
+          <div class="founder reveal">
+            <div class="founder-photo">
+              <img src="1774863493730.png" alt="Matteo Mio" loading="lazy"/>
+            </div>
+            <div>
+              <h3 class="headline-lg founder-name">Matteo Mio</h3>
+              <p class="body-lg founder-role">Co-founder, full-stack developer &amp; AI integration strategist. Built LeSpot (in collaboration with Open Data University and Ministère de la Culture) and Student Life Tracker end-to-end. Shipped email automation infrastructure for Meetball. BA Economics &amp; Politics at LSE — First Class Honours, first year. BabyVC Spring 2026 Fellow. AWS Prompt Engineering certified. Based in Geneva and Paris.</p>
+              <div class="founder-links">
+                <a class="label-sm founder-link" href="https://www.linkedin.com/in/matteomio/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a class="label-sm founder-link" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Founder 2 — Max Hengl -->
+          <div class="founder reveal">
+            <div class="founder-photo">
+              <img src="1759707821836.jpg" alt="Max Hengl" loading="lazy"/>
+            </div>
+            <div>
+              <h3 class="headline-lg founder-name">Max Hengl</h3>
+              <p class="body-lg founder-role">Co-founder &amp; AI integration strategist. Focused on how AI systems create real business value — from automation architecture to go-to-market. Former marketing agency founder with hands-on experience in web development and client acquisition. Incoming AI Integration Consulting at Accenture. BA Politics &amp; Economics at LSE. Based in Vienna &amp; Paris.</p>
+              <div class="founder-links">
+                <a class="label-sm founder-link" href="https://www.linkedin.com/in/max-hengl-590a72246/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a class="label-sm founder-link" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         TECH STACK MARQUEE
+    ================================================= -->
+    <section class="marquee-section" aria-label="Technology stack">
+      <div class="marquee-track" id="marquee-track">
+        <!-- First set -->
+        <span class="label-sm marquee-item">GEMINI AI</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">MAKE.COM</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">N8N</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">RESEND</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">AWS</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">REACT</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">SUPABASE</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">TYPESCRIPT</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">VERCEL</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">CLOUDFLARE</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">PYTHON</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">POSTGRESQL</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item">CLAUDE</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <!-- Duplicate for seamless loop -->
+        <span class="label-sm marquee-item" aria-hidden="true">GEMINI AI</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">MAKE.COM</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">N8N</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">RESEND</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">AWS</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">REACT</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">SUPABASE</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">TYPESCRIPT</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">VERCEL</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">CLOUDFLARE</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">PYTHON</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">POSTGRESQL</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+        <span class="label-sm marquee-item" aria-hidden="true">CLAUDE</span>
+        <span class="label-sm marquee-item" aria-hidden="true">&middot;</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =================================================
+       FOOTER
+  ================================================= -->
+  <footer class="footer" id="contact" aria-label="Contact and footer">
+
+    <!-- CTA -->
+    <a class="footer-cta display-md" href="mailto:scaleformoffice@gmail.com">
+      LET&rsquo;S TALK <span class="arrow">&rarr;</span>
+    </a>
+
+    <hr class="footer-rule"/>
+
+    <div class="footer-bottom">
+      <div>
+        <span class="footer-wordmark">SCALEFORM</span>
+        <div class="footer-links">
+          <a class="label-sm footer-link" href="mailto:scaleformoffice@gmail.com">Email</a>
+          <a class="label-sm footer-link" href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a class="label-sm footer-link" href="https://www.linkedin.com/company/scaleform-o%C3%BC/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+      <p class="label-sm footer-copy">&copy; 2026 SCALEFORM. BUILT FOR PERMANENCE.</p>
+    </div>
+
+  </footer>
+
+  <!-- =================================================
+       PROJECT DETAIL PANEL
+  ================================================= -->
+  <div class="proj-panel-overlay" id="proj-panel-overlay" role="dialog" aria-modal="true" aria-label="Project detail">
+    <aside class="proj-panel">
+      <div class="panel-nav">
+        <span class="label-sm" id="panel-category" style="color:var(--on-surface-variant);"></span>
+        <button class="panel-close" id="panel-close" aria-label="Close panel">&#215;</button>
+      </div>
+      <div class="panel-body">
+        <h2 class="display-md panel-title" id="panel-title"></h2>
+        <span class="label-sm" id="panel-role" style="color:var(--on-surface-variant);display:block;margin-bottom:1.75rem;"></span>
+
+        <!-- Custom layout (used by projects with panelHTML) -->
+        <div id="panel-custom" style="display:none;"></div>
+
+        <!-- Standard layout -->
+        <div id="panel-description"></div>
+
+        <div id="panel-out-section">
+          <hr class="panel-divider"/>
+          <span class="label-sm panel-section-label">Key Outcomes</span>
+          <ul class="panel-outcomes" id="panel-outcomes"></ul>
+        </div>
+
+        <div id="panel-tech-section">
+          <hr class="panel-divider"/>
+          <span class="label-sm panel-section-label">Tech Stack</span>
+          <p class="label-sm panel-tech" id="panel-tech" style="color:var(--on-surface-variant);line-height:1.8;letter-spacing:0.06em;"></p>
+        </div>
+
+        <a class="panel-link" id="panel-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;margin-right:1.5rem;"></a>
+        <a class="panel-link" id="panel-link2" href="#" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- =================================================
+       SCRIPTS
+  ================================================= -->
+  <script>
+    /* --- Scroll cue --- */
+    var scrollCue = document.getElementById('scroll-cue');
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 100) scrollCue.classList.add('gone');
+      else scrollCue.classList.remove('gone');
+    }, { passive: true });
+
+    /* --- Section reveal --- */
+    var reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.05, rootMargin: '0px 0px 60px 0px' });
+      reveals.forEach(function (el) { io.observe(el); });
+      /* Fallback: guarantee all elements are visible after 800ms */
+      setTimeout(function () {
+        reveals.forEach(function (el) { el.classList.add('in'); });
+      }, 800);
+    } else {
+      reveals.forEach(function (el) { el.classList.add('in'); });
+    }
+
+    /* --- Mobile nav --- */
+    var hamburger = document.getElementById('hamburger');
+    var overlay   = document.getElementById('mobile-overlay');
+    var closeBtn  = document.getElementById('mobile-close');
+
+    function openNav() {
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeNav() {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', openNav);
+    closeBtn.addEventListener('click', closeNav);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNav(); });
+
+    /* --- Active nav link on scroll --- */
+    var sections = document.querySelectorAll('section[id], footer[id]');
+    var navLinks = document.querySelectorAll('.nav-link');
+
+    var navIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          navLinks.forEach(function (link) {
+            link.classList.remove('is-active');
+            if (link.getAttribute('href') === '#' + entry.target.id) {
+              link.classList.add('is-active');
+            }
+          });
+        }
+      });
+    }, { threshold: 0.35 });
+
+    sections.forEach(function (s) { navIO.observe(s); });
+
+    /* ─────────────────────────────────────────────────
+       PROJECT DETAIL PANEL
+    ───────────────────────────────────────────────── */
+    var PROJECTS = {
+      lespot: {
+        category: 'AI APP · FULL-STACK',
+        name: 'LeSpot',
+        role: 'Matteo Mio — Lead Developer & Product Owner',
+        description: [
+          'LeSpot is a free cultural event discovery platform built for international students living in Paris. Faced with a city that hides its best free events behind language barriers and scattered sources, LeSpot curates 1,500+ verified events across all 20 arrondissements — from hidden courtyard concerts to ministerial exhibitions — and matches them to the user\'s mood in seconds.',
+          'Built in collaboration with Open Data University and with support from Ministère de la Culture\'s open data initiative. The app runs a Gemini AI recommendation engine on a 9-table Supabase backend, with full auth, row-level security, and a 7-step onboarding flow designed to capture cultural preferences on first use.'
+        ],
+        outcomes: [
+          '1,500+ free events curated across all 20 Paris arrondissements',
+          'Gemini AI powers mood-based personalised recommendations',
+          'Built in collaboration with Open Data University & Ministère de la Culture',
+          '7-step onboarding flow with cultural preference capture',
+          'Live beta deployed on Vercel — early access waitlist active'
+        ],
+        tech: 'React · TypeScript · Supabase · Gemini AI · Vercel · PostgreSQL',
+        link: 'https://web-lespot.vercel.app/',
+        linkText: 'Open live app →',
+        link2: 'https://lespot-paris.netlify.app/',
+        link2Text: 'Early access landing page →'
+      },
+      tracker: {
+        category: 'PRODUCTIVITY · FULL-STACK',
+        name: 'Student Productivity Tracker',
+        role: 'Matteo Mio — Lead Developer & Product Designer',
+        description: [
+          'Student Productivity Tracker is an academic and wellness management platform designed for the realities of university life. Built after identifying the gap between generic productivity tools (Notion, Todoist) and the specific pressures of being a student — exam deadlines, wellness tracking, session logging, and the psychology of consistency.',
+          'The core innovation is a custom 3-axis reliability scoring engine: completion rate (40%), focus quality (40%), and precision (20%) — aggregated over a 10-day rolling window. A Duolingo-style streak system reinforces daily engagement. The codebase runs on 7 custom React hooks, a 9-table Supabase schema with full RLS, and Recharts for data visualisation.'
+        ],
+        outcomes: [
+          '9-table PostgreSQL schema with row-level security in Supabase',
+          'Custom 3-axis reliability scoring engine (completion 40% · focus 40% · precision 20%)',
+          'Gamified Duolingo-style streak system for daily accountability',
+          '4 core modules: Task sessions, Academic scheduling, Wellness tracking, Profile',
+          '7 custom React hooks — clean, composable state architecture',
+          'Live app deployed on Lovable'
+        ],
+        tech: 'React · TypeScript · Supabase · PostgreSQL · Recharts · Vite',
+        link: 'https://studentlifetracker.lovable.app/',
+        linkText: 'Open live app →'
+      },
+      meetball: {
+        category: 'AUTOMATION · EMAIL ENGINEERING',
+        name: 'Meetball — Email Automation',
+        role: 'Matteo Mio — Automations & Email Marketing Lead',
+        description: [
+          'Meetball is a Lisbon-based community startup connecting people at events — Portugal Tech Week, Web Summit, hackathons. The product matches attendees who need help with those who can provide it. Brought in as Automations & Email Marketing Lead to design and ship the full notification system and automated email marketing infrastructure.',
+          'Delivered 6 hand-coded HTML/CSS email workflows and multiple Make.com pipelines routing webhook events through conditional logic — Webhooks → Router → filter branches → Resend nodes + Data store deduplication. The full system went live for Web Summit Lisbon, one of Europe\'s largest tech conferences.'
+        ],
+        outcomes: [
+          '6 production HTML/CSS email workflows — notifications, outreach, re-engagement sequences',
+          'Multiple Make.com pipelines: Webhooks → Router → Resend + Data store with deduplication logic',
+          'Full system deployed live for Web Summit Lisbon',
+          'Event organiser campaign: QR code assets, printable flyers, PPT/PDF display, day-of facilitation script',
+          'KPIs defined: 70% helper connection rate · 40% MiniMeet creation rate · 50% re-engagement rate'
+        ],
+        tech: 'Make.com · Resend · Webhooks · HTML Email · CSS · Data Store',
+        link: 'https://meetball.fun',
+        linkText: 'View Meetball →'
+      },
+      mirofish: {
+        category: 'AI AGENTS · SIMULATION · FORECASTING',
+        name: 'MiroFish — Swarm Intelligence Engine',
+        role: 'Matteo Mio — Builder & Researcher',
+        panelHTML: '<div class="mf-panel-stats"><div class="mf-ps"><span class="mf-ps-num">3</span><span class="mf-ps-lbl">Simulation Runs</span></div><div class="mf-ps"><span class="mf-ps-num">120</span><span class="mf-ps-lbl">Agents / Run</span></div><div class="mf-ps"><span class="mf-ps-num">250+</span><span class="mf-ps-lbl">Graph Nodes</span></div><div class="mf-ps"><span class="mf-ps-num">#1</span><span class="mf-ps-lbl">GitHub Global Trending</span></div></div><p class="panel-text body-lg">Multi-agent AI simulation for real-world forecasting, built on MiroFish — an open-source swarm intelligence engine backed by $4.1M from Chen Tianqiao and reaching #1 on GitHub Global Trending above OpenAI, Google, and Microsoft. Rather than statistics, 120 agents with independent personalities simulate social dynamics: posts, debates, coalitions, opinion shifts. Predictions emerge from that collective behaviour.</p><span class="mf-section-lbl">5-Stage Simulation Pipeline</span><div class="mf-stages"><div class="mf-stage"><span class="mf-stage-n">01</span><div class="mf-stage-body"><span class="mf-stage-name">Graph Build</span><span class="mf-stage-desc">Seed PDF parsed → entities and relationships extracted via NER/RE → stored in Neo4j knowledge graph (250+ nodes and edges)</span></div></div><div class="mf-stage"><span class="mf-stage-n">02</span><div class="mf-stage-body"><span class="mf-stage-name">Agent Setup</span><span class="mf-stage-desc">120 agent personas generated from the graph — each with unique personality, opinion bias, reaction speed, influence level, and long-term memory</span></div></div><div class="mf-stage"><span class="mf-stage-n">03</span><div class="mf-stage-body"><span class="mf-stage-name">Dual Simulation</span><span class="mf-stage-desc">Plaza (Twitter-style: posts, likes, reposts) + Topic Community (Reddit-style: threads, debates) run in parallel — agents interact, form factions, shift opinions</span></div></div><div class="mf-stage"><span class="mf-stage-n">04</span><div class="mf-stage-body"><span class="mf-stage-name">Report Generation</span><span class="mf-stage-desc">ReportAgent synthesises via GraphRAG — Core Findings, Crowd Behaviour Analysis, Risk Outlook across structured sections</span></div></div><div class="mf-stage"><span class="mf-stage-n">05</span><div class="mf-stage-body"><span class="mf-stage-name">Deep Interaction</span><span class="mf-stage-desc">Chat directly with any simulated agent or the ReportAgent for follow-up analysis, counterfactuals, and scenario testing</span></div></div></div><span class="mf-section-lbl">Use Case 01 — 2026 FIFA World Cup Prediction</span><div class="mf-runs-panel"><div class="mf-run-card"><span class="mf-run-label">Run 1</span><span class="mf-run-country">Argentina</span><span class="mf-run-detail">Defeated France in the final — defending champion repeats</span></div><div class="mf-run-card"><span class="mf-run-label">Run 2</span><span class="mf-run-country">Brazil</span><span class="mf-run-detail">Record 6th title — defeated Argentina or England</span></div><div class="mf-run-card"><span class="mf-run-label">Run 3</span><span class="mf-run-country">Spain</span><span class="mf-run-detail">Rodri &amp; Lamine Yamal pivotal — Mbapp&eacute; top scorer for France</span></div></div><div class="mf-insight-box">France appeared as finalist in all 3 runs — the agent society consistently views France as among the top two most likely finalists regardless of champion. Argentina, Brazil, and Spain each won once — a statistical tie among the three top contenders, closely aligned with prediction market consensus.</div><div class="mf-next-box"><span class="mf-next-badge">Use Case 02 &middot; In Research</span><span class="mf-next-title">2026 Hungarian Parliamentary Election</span><span class="mf-next-desc">Orbán\'s Fidesz-KDNP vs. Péter Magyar\'s Tisza · April 12, 2026 · "Europe\'s most important election of 2026" — Politico Europe. Being enhanced by Brain in the Fish, a Rust-based performance server under development for higher agent counts and faster simulation cycles.</span></div>'
+      },
+      openclaw: {
+        category: 'AI AGENTS · INFRASTRUCTURE',
+        name: 'OpenClaw — Multi-Agent Framework',
+        role: 'Scaleform — Research & Infrastructure',
+        description: [
+          'OpenClaw is Scaleform\'s multi-agent AI framework — a blueprint for personal AI agent teams. Rather than a single AI assistant, OpenClaw orchestrates networks of specialised agents into self-running structures that delegate tasks, maintain context, and operate autonomously. The framework is designed to be reproduced and adapted across different use cases.',
+          'The infrastructure runs on a remote AWS instance with a REST API layer connecting each agent node. Agents query LLMs via OpenRouter — keeping the stack lean, cost-free, and portable. OpenClaw is the foundation for a growing library of multi-agent use cases, from simulated office infrastructure to outreach automation and rapid research pipelines.'
+        ],
+        outcomes: [
+          'Multi-agentic office infrastructure — CEO delegates to COO, CTO, HR, Research autonomously',
+          'Fully integrated outreach team — agents research targets, draft and schedule communications',
+          'Idea testing & research frameworks — parallel agent reasoning for faster validation',
+          'Remote AWS instance with REST API layer — fully self-hosted and reproducible',
+          'OpenRouter integration — free agentic LLMs across all agent nodes',
+          'Blueprint for personal AI agent teams at startup and enterprise scale'
+        ],
+        tech: 'Python · AWS · REST API · OpenRouter · Multi-agent orchestration'
+      }
+    };
+
+    var panelOverlay = document.getElementById('proj-panel-overlay');
+    var panelClose   = document.getElementById('panel-close');
+
+    function openProject(id) {
+      var p = PROJECTS[id];
+      if (!p) return;
+
+      document.getElementById('panel-category').textContent = p.category;
+      document.getElementById('panel-title').textContent    = p.name;
+      document.getElementById('panel-role').textContent     = p.role;
+
+      var customEl   = document.getElementById('panel-custom');
+      var descEl     = document.getElementById('panel-description');
+      var outSection = document.getElementById('panel-out-section');
+      var techSection= document.getElementById('panel-tech-section');
+
+      if (p.panelHTML) {
+        customEl.innerHTML = p.panelHTML;
+        customEl.style.display = 'block';
+        descEl.innerHTML = '';
+        outSection.style.display = 'none';
+        techSection.style.display = 'none';
+      } else {
+        customEl.innerHTML = '';
+        customEl.style.display = 'none';
+        outSection.style.display = 'block';
+        techSection.style.display = 'block';
+
+        descEl.innerHTML = p.description.map(function(d) {
+          return '<p class="panel-text body-lg">' + d + '</p>';
+        }).join('');
+
+        var outEl = document.getElementById('panel-outcomes');
+        outEl.innerHTML = p.outcomes.map(function(o) {
+          return '<li class="panel-outcome">' + o + '</li>';
+        }).join('');
+
+        document.getElementById('panel-tech').textContent = p.tech;
+      }
+
+      var linkEl = document.getElementById('panel-link');
+      if (p.link) {
+        linkEl.href = p.link; linkEl.textContent = p.linkText; linkEl.style.display = 'inline-block';
+      } else { linkEl.style.display = 'none'; }
+      var link2El = document.getElementById('panel-link2');
+      if (p.link2) {
+        link2El.href = p.link2; link2El.textContent = p.link2Text; link2El.style.display = 'inline-block';
+      } else { link2El.style.display = 'none'; }
+
+      panelOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      panelClose.focus();
+    }
+
+    function closeProjPanel() {
+      panelOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    panelOverlay.addEventListener('click', function(e) {
+      if (e.target === panelOverlay) closeProjPanel();
+    });
+    panelClose.addEventListener('click', closeProjPanel);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && panelOverlay.classList.contains('open')) closeProjPanel();
+    });
+  </script>
+
+</body>
+</html>
