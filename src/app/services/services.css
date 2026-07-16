@@ -1,0 +1,86 @@
+/* =====================================================
+   SERVICES PAGE
+   Scoped styles for /services. Global resets, the type
+   scale and the reduced-motion overrides live in
+   globals.css — only page-specific rules belong here.
+===================================================== */
+
+::selection {
+  background: rgba(45, 108, 255, 0.22);
+}
+
+@keyframes svc-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes svc-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(7px); }
+}
+
+.svc-caret {
+  display: inline-block;
+  width: 0.04em;
+  margin-left: 0.06em;
+  animation: svc-blink 1s step-start infinite;
+}
+
+.svc-scroll-cue {
+  animation: svc-bob 1.8s ease-in-out infinite;
+}
+
+/* Cost-meter dial (Hungary 2026 case study) */
+.svc-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  border-radius: 3px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.16);
+}
+.svc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #b565f0;
+  border: 3px solid #0e1220;
+  box-shadow: 0 0 0 1px rgba(181, 101, 240, 0.6), 0 0 22px rgba(181, 101, 240, 0.7);
+  cursor: grab;
+}
+.svc-range::-webkit-slider-thumb:active {
+  cursor: grabbing;
+}
+.svc-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #b565f0;
+  border: 3px solid #0e1220;
+  box-shadow: 0 0 22px rgba(181, 101, 240, 0.7);
+  cursor: grab;
+}
+
+.svc-chip {
+  transition: transform 200ms var(--ease), background 200ms ease;
+}
+.svc-chip:hover {
+  transform: translateY(-2px);
+}
+
+.svc-btn {
+  transition: transform 220ms var(--ease), box-shadow 220ms ease, background 200ms ease;
+}
+.svc-btn:hover {
+  transform: translateY(-2px);
+}
+
+.svc-seclink {
+  transition: opacity 200ms ease;
+  opacity: 0.85;
+}
+.svc-seclink:hover {
+  opacity: 1;
+}

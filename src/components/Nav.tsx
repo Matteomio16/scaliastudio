@@ -1,14 +1,42 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const links = [
   { href: "#projects", label: "Projects" },
+  { href: "/services", label: "Services" },
   { href: "#about", label: "About" },
   { href: "#contact", label: "Contact" },
 ];
+
+/** Same-page hashes stay plain anchors; real routes go through next/link. */
+function NavLink({
+  href,
+  label,
+  className,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  className: string;
+  onClick?: () => void;
+}) {
+  if (href.startsWith("#")) {
+    return (
+      <a href={href} className={className} onClick={onClick}>
+        {label}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className} onClick={onClick}>
+      {label}
+    </Link>
+  );
+}
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -48,15 +76,14 @@ export default function Nav() {
 
         <div className="hidden md:flex items-center gap-10">
           {links.map((l) => (
-            <a
+            <NavLink
               key={l.href}
               href={l.href}
+              label={l.label}
               className={`text-[0.8125rem] transition-colors hover:text-accent-blue-glow ${
                 scrolled ? "text-dark-on-variant" : "text-on-surface-variant"
               }`}
-            >
-              {l.label}
-            </a>
+            />
           ))}
         </div>
 
@@ -97,14 +124,13 @@ export default function Nav() {
               &#215;
             </button>
             {links.map((l) => (
-              <a
+              <NavLink
                 key={l.href}
                 href={l.href}
+                label={l.label}
                 onClick={() => setOpen(false)}
                 className="display-md hover:text-accent-blue-glow transition-colors"
-              >
-                {l.label}
-              </a>
+              />
             ))}
           </motion.div>
         )}
