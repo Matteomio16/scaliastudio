@@ -237,23 +237,7 @@ export default function ServicesPage() {
             </svg>
           </div>
 
-          <HeroCards heroId="svc-top" />
-
-          {/* fade the card stack out into the cream page */}
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 190,
-              background:
-                "linear-gradient(to bottom, rgba(250,249,245,0) 0%, rgba(250,249,245,0.85) 62%, #faf9f5 100%)",
-              zIndex: 3,
-              pointerEvents: "none",
-            }}
-          />
+          <HeroCards />
         </section>
 
         {/* ============ WHAT DO YOU WANT TO BUILD ============ */}

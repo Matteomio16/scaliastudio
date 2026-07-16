@@ -94,7 +94,15 @@ const cards: HeroCard[] = [
   },
 ];
 
-export default function HeroCards({ heroId }: { heroId: string }) {
+/** Grow the cards up to this much (×) as they reach vertical centre. */
+const PEAK_SCALE = 1.2;
+/**
+ * The row starts growing once its centre climbs to within this fraction of the
+ * viewport height below the middle, and is fully grown at (or above) centre.
+ */
+const RAMP = 0.32;
+
+export default function HeroCards() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const reduced = useReducedMotion();
@@ -102,8 +110,7 @@ export default function HeroCards({ heroId }: { heroId: string }) {
   useEffect(() => {
     if (reduced) return;
     const wrap = wrapRef.current;
-    const hero = document.getElementById(heroId);
-    if (!wrap || !hero) return;
+    if (!wrap) return;
 
     const els = cardRefs.current.filter(Boolean) as HTMLAnchorElement[];
     if (!els.length) return;
@@ -122,24 +129,30 @@ export default function HeroCards({ heroId }: { heroId: string }) {
     };
     window.addEventListener("pointermove", onMove, { passive: true });
 
-    const onSpread = () => {
-      const top = hero.getBoundingClientRect().top;
-      sp = Math.min(1, Math.max(0, -top / (window.innerHeight * 0.85)));
+    // Progress tracks how close the card row's centre is to the viewport's
+    // middle: 0 while the row still sits a screenful below, ramping to 1 as it
+    // reaches centre — and it stays clamped at 1 once the row rises past it, so
+    // the cards hold their peak size instead of growing without bound.
+    const onScrollProgress = () => {
+      const r = wrap.getBoundingClientRect();
+      const rowCentre = r.top + r.height / 2;
+      const below = Math.max(0, rowCentre - window.innerHeight / 2);
+      sp = 1 - Math.min(1, below / (window.innerHeight * RAMP));
     };
-    window.addEventListener("scroll", onSpread, { passive: true });
-    window.addEventListener("resize", onSpread);
-    onSpread();
+    window.addEventListener("scroll", onScrollProgress, { passive: true });
+    window.addEventListener("resize", onScrollProgress);
+    onScrollProgress();
 
     const anim = () => {
       cx += (sx - cx) * 0.06;
       cy += (sy - cy) * 0.06;
-      // easeInOutQuad on the scroll progress so the fan-out settles gently
-      const ep = sp < 0.5 ? 2 * sp * sp : 1 - Math.pow(-2 * sp + 2, 2) / 2;
-      const scale = 1 + ep * 0.14;
+      // easeOutCubic so growth and fan-out decelerate into the centred peak
+      const ep = 1 - Math.pow(1 - sp, 3);
+      const scale = 1 + ep * (PEAK_SCALE - 1);
       els.forEach((el, i) => {
         const c = cards[i];
         const tx = cx * (c.depth * 0.12) + c.spread * ep * 80;
-        const ty = cy * (c.depth * 0.08) - ep * 14;
+        const ty = cy * (c.depth * 0.08);
         el.style.transform = `translate3d(${tx}px,${ty}px,0) rotate(${
           c.rot + cx * 1.6
         }deg) scale(${scale})`;
@@ -151,10 +164,10 @@ export default function HeroCards({ heroId }: { heroId: string }) {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("scroll", onSpread);
-      window.removeEventListener("resize", onSpread);
+      window.removeEventListener("scroll", onScrollProgress);
+      window.removeEventListener("resize", onScrollProgress);
     };
-  }, [heroId, reduced]);
+  }, [reduced]);
 
   return (
     <div
